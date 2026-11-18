@@ -1,527 +1,486 @@
+
 <!DOCTYPE html>
 <html lang="sw">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GBPESA</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GBPESA GB SHOP</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root {
-  --bg:#090d16;
-  --panel:#151c2b;
-  --panel2:#1d2638;
-  --red:#ed343e;
-  --green:#16c784;
-  --gold:#ffc857;
-  --white:#fff;
-  --muted:#9ba8bb;
-}
+:root{--g:#087f5b;--d:#07543e;--gold:#ffd166;--bg:#f3f7f5}
 *{box-sizing:border-box}
-body{
- margin:0;background:var(--bg);color:var(--white);
- font-family:Arial,sans-serif;
-}
-header{
- padding:17px 20px;background:#111827;
- display:flex;justify-content:space-between;
- align-items:center;border-bottom:1px solid #293448;
-}
-.logo{font-size:25px;font-weight:900;letter-spacing:1px}
-.logo span{color:var(--green)}
-header button{width:auto}
-.container{max-width:950px;margin:auto;padding:18px}
-.card{
- background:var(--panel);padding:20px;
- border:1px solid #293448;border-radius:15px;margin-bottom:16px;
-}
-h2,h3{margin-top:0}
-input{
- width:100%;padding:14px;margin:8px 0 14px;
- background:#0d1421;color:white;
- border:1px solid #35435a;border-radius:9px;
- font-size:15px;
-}
-button{
- border:0;border-radius:9px;padding:13px 17px;
- background:var(--green);color:#07130e;
- font-weight:bold;cursor:pointer;font-size:14px;
-}
-button:disabled{opacity:.5}
-button.secondary{background:#344258;color:white}
-button.red{background:var(--red);color:white}
-button.gold{background:var(--gold);color:#171000}
-button.full{width:100%}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}
-.tabs button{flex:1;min-width:100px}
+body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:#25342c}
+header{background:var(--g);color:white;padding:22px 16px}
+header h1{margin:0;font-size:27px}
+header p{margin:8px 0 0;font-size:14px}
+nav{display:flex;gap:7px;overflow:auto;background:white;padding:10px;position:sticky;top:0;z-index:5}
+button{border:0;border-radius:9px;padding:12px 15px;background:var(--g);color:white;font-weight:bold;cursor:pointer}
+nav button{background:#e5f2eb;color:var(--d);white-space:nowrap}
+nav button.active{background:var(--g);color:white}
+main{max-width:850px;margin:auto;padding:13px}
+.panel{background:white;border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 3px 12px #0000000a}
+h2{color:var(--d);font-size:20px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.package,.order{border:1px solid #e0e9e3;border-radius:11px;padding:13px;margin:8px 0}
+.price{font-size:22px;color:var(--g);font-weight:bold}
+input,select,textarea{width:100%;padding:13px;border:1px solid #d5dfd9;border-radius:8px;margin:6px 0 13px;font-size:15px}
+label{font-size:13px;font-weight:bold}
+.small{font-size:12px;color:#718078}
 .hidden{display:none!important}
-.muted{color:var(--muted);font-size:13px}
-.balance{
- font-size:34px;color:var(--green);font-weight:900;
- margin:12px 0;
-}
-.game{
- background:radial-gradient(ellipse at 50% 100%,#38202b,#101827 65%);
- min-height:260px;border-radius:15px;
- display:flex;flex-direction:column;
- justify-content:center;align-items:center;
- overflow:hidden;position:relative;
- border:1px solid #49323d;
-}
-.multiplier{font-size:54px;font-weight:900;color:#fff}
-.plane{font-size:65px;transform:rotate(-12deg)}
-.game small{color:#c5ccd9}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.stat{background:var(--panel2);padding:15px;border-radius:10px}
-.stat strong{display:block;font-size:19px;margin-top:8px}
-.notice{padding:12px;border-radius:9px;background:#252d3b;
- color:#dce5f4;font-size:13px;margin:12px 0}
-.success{color:var(--green)}
-.error{color:#ff6971}
-label{font-size:13px;color:#c5ccd9}
-footer{text-align:center;color:#78869a;padding:25px;font-size:12px}
-@media(max-width:480px){
- .container{padding:12px}
- .grid{grid-template-columns:1fr}
- .balance{font-size:29px}
-}
+.notice{padding:12px;background:#fff5d9;border-radius:9px;font-size:13px}
+.msg{padding:10px;border-radius:8px;margin-top:8px;background:#e5f5eb;color:#07543e}
+.err{background:#ffe9e9;color:#a21b1b}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.danger{background:#b52b37}
+.secondary{background:#64746a}
+footer{text-align:center;padding:25px;color:#718078;font-size:12px}
+@media(max-width:390px){main{padding:8px}.panel{padding:12px}}
 </style>
 </head>
 <body>
 
 <header>
- <div class="logo">GB<span>PESA</span></div>
- <button id="logoutBtn" class="secondary hidden"
- onclick="logout()">Toka</button>
+ <h1>GBPESA <span style="color:#ffd166">GB SHOP</span></h1>
+ <p>Nunua GB kwa urahisi · Tanzania</p>
 </header>
 
-<div class="container">
+<nav>
+ <button class="active" data-page="shop">Nunua GB</button>
+ <button data-page="orders">Oda zangu</button>
+ <button data-page="account">Akaunti</button>
+ <button data-page="admin" id="adminTab" class="hidden">Admin</button>
+</nav>
 
-<!-- AUTH -->
-<section id="authSection">
- <div class="card">
-  <h2>Karibu GBPESA</h2>
-  <p class="muted">Fungua akaunti au ingia kwenye akaunti yako.</p>
-
-  <div class="tabs">
-   <button onclick="showAuth('login')">INGIA</button>
-   <button class="secondary" onclick="showAuth('signup')">JISAJILI</button>
-  </div>
-
-  <div id="loginForm">
-   <label>Email</label>
-   <input id="loginEmail" type="email" placeholder="Email yako">
-   <label>Password</label>
-   <input id="loginPassword" type="password" placeholder="Password">
-   <button class="full" onclick="login()">INGIA KWENYE AKAUNTI</button>
-  </div>
-
-  <div id="signupForm" class="hidden">
-   <label>Jina kamili</label>
-   <input id="signupName" placeholder="Jina lako">
-   <label>Email</label>
-   <input id="signupEmail" type="email" placeholder="Email yako">
-   <label>Password</label>
-   <input id="signupPassword" type="password"
-    minlength="8" placeholder="Password (angalau herufi 8)">
-   <button class="full" onclick="signup()">FUNGUA AKAUNTI</button>
-  </div>
-  <p id="authMessage" class="muted"></p>
+<main>
+<section id="shop" class="page">
+ <div class="panel">
+  <h2>Karibu GBPESA GB SHOP</h2>
+  <p>Chagua kifurushi chako na weka namba ya simu inayopokea GB.</p>
+  <div class="notice">Vifurushi na bei husimamiwa na Admin.</div>
+ </div>
+ <div class="panel">
+  <h2>Vifurushi vinavyopatikana</h2>
+  <div id="packages" class="grid">Inapakia...</div>
+ </div>
+ <div class="panel hidden" id="buyPanel">
+  <h2>Thibitisha oda yako</h2>
+  <div id="chosen"></div>
+  <label>Namba ya simu ya kupokea GB</label>
+  <input id="recipient" inputmode="tel" placeholder="07XXXXXXXX">
+  <button id="createOrder" style="width:100%">Tengeneza oda</button>
+  <div id="buyMsg"></div>
  </div>
 </section>
 
-<!-- DASHBOARD -->
-<section id="dashboard" class="hidden">
- <div class="card">
-  <p class="muted">Karibu, <strong id="customerName">Mteja</strong></p>
-  <p class="muted">SALIO LA AKAUNTI</p>
-  <div class="balance" id="balance">TSh 0</div>
-  <div class="grid">
-   <button onclick="showPage('deposit')">+ DEPOSIT</button>
-   <button class="gold" onclick="showPage('withdraw')">WITHDRAW</button>
-  </div>
+<section id="orders" class="page hidden">
+ <div class="panel">
+  <h2>Oda zangu</h2>
+  <div id="myOrders">Ingia kwanza.</div>
  </div>
-
- <div class="tabs">
-  <button onclick="showPage('home')">Nyumbani</button>
-  <button class="secondary" onclick="showPage('deposit')">Deposit</button>
-  <button class="secondary" onclick="showPage('withdraw')">Withdraw</button>
-  <button class="secondary" onclick="showPage('history')">Historia</button>
-  <button id="adminTab" class="red hidden"
-   onclick="showPage('admin')">Admin</button>
- </div>
-
- <!-- HOME -->
- <div id="homePage">
-  <div class="card">
-   <h2>GBPESA AVIATOR</h2>
-   <div class="game">
-    <small>AVIATOR STYLE · DEMO PREVIEW</small>
-    <div class="plane">✈️</div>
-    <div class="multiplier">1.00x</div>
-    <small>Mchezo wa majaribio</small>
-   </div>
-   <div class="notice">
-    Hili ni eneo la muonekano wa mchezo tu. Hakuna dau,
-    ushindi wa fedha au utoaji wa fedha unaofanyika hapa.
-   </div>
-  </div>
-  <div class="card">
-   <h3>Huduma za GBPESA</h3>
-   <p class="muted">Deposit, withdrawal na historia ya akaunti yako.</p>
-  </div>
- </div>
-
- <!-- DEPOSIT -->
- <div id="depositPage" class="hidden">
-  <div class="card">
-   <h2>Weka Pesa (Deposit)</h2>
-   <p class="muted">Weka kiasi unachotaka kulipia.</p>
-   <label>Kiasi (TSh)</label>
-   <input id="depositAmount" type="number" min="1000"
-    step="100" placeholder="Mfano 10000">
-   <button class="full" onclick="createDeposit()">
-    ENDELEA NA DEPOSIT
-   </button>
-   <p id="depositMessage" class="muted"></p>
-   <div class="notice">
-    Muunganisho wa FimiPay bado haujawashwa.
-    Ombi hili halimaanishi kuwa malipo yamepokelewa.
-   </div>
-  </div>
- </div>
-
- <!-- WITHDRAW -->
- <div id="withdrawPage" class="hidden">
-  <div class="card">
-   <h2>Toa Pesa (Withdrawal)</h2>
-   <p class="muted">Kiwango cha chini ni TSh 5,000.</p>
-   <label>Namba ya simu inayopokea pesa</label>
-   <input id="withdrawPhone" type="tel"
-    placeholder="Mfano 07XXXXXXXX">
-   <label>Kiasi cha kutoa (TSh)</label>
-   <input id="withdrawAmount" type="number"
-    min="5000" step="100" placeholder="5000">
-   <button class="full gold" onclick="createWithdrawal()">
-    TUMA OMBI LA WITHDRAWAL
-   </button>
-   <p id="withdrawMessage" class="muted"></p>
-   <div class="notice">
-    Maombi yatatumwa kwa Admin kwa ajili ya ukaguzi.
-    Kutuma ombi si uthibitisho wa kulipwa.
-   </div>
-  </div>
- </div>
-
- <!-- HISTORY -->
- <div id="historyPage" class="hidden">
-  <div class="card">
-   <h2>Historia ya Miamala</h2>
-   <div id="historyList" class="muted">Inapakia...</div>
-  </div>
- </div>
-
- <!-- ADMIN -->
- <div id="adminPage" class="hidden">
-  <div class="card">
-   <h2>GBPESA ADMIN</h2>
-   <p class="muted">Maombi ya withdrawal</p>
-   <button class="secondary" onclick="loadAdmin()">Refresh</button>
-   <div id="adminList"></div>
-  </div>
- </div>
-
 </section>
-</div>
 
-<footer>GBPESA · Tumia huduma kwa uwajibikaji</footer>
+<section id="account" class="page hidden">
+ <div class="panel" id="authPanel">
+  <h2>Ingia</h2>
+  <label>Email</label>
+  <input id="email" type="email" placeholder="Email">
+  <label>Password</label>
+  <input id="password" type="password" placeholder="Password">
+  <button id="login" style="width:100%">Ingia kwenye akaunti</button>
+  <hr>
+  <h2>Jisajili</h2>
+  <label>Jina kamili</label>
+  <input id="fullName" placeholder="Jina lako">
+  <label>Namba ya simu</label>
+  <input id="phone" placeholder="07XXXXXXXX">
+  <label>Email</label>
+  <input id="newEmail" type="email" placeholder="Email">
+  <label>Password</label>
+  <input id="newPassword" type="password" placeholder="Angalau herufi 6">
+  <button id="register" style="width:100%">Fungua akaunti</button>
+  <div id="authMsg"></div>
+ </div>
+ <div class="panel hidden" id="userPanel">
+  <h2>Akaunti yangu</h2>
+  <p id="userEmail"></p>
+  <p id="userRole"></p>
+  <button id="logout">Toka</button>
+ </div>
+</section>
+
+<section id="admin" class="page hidden">
+ <div class="panel">
+  <h2>GBPESA ADMIN</h2>
+  <p>Usimamizi wa biashara ya GB.</p>
+ </div>
+
+ <div class="panel">
+  <h2 id="formTitle">Ongeza kifurushi</h2>
+  <input type="hidden" id="editId">
+  <label>Jina la kifurushi</label>
+  <input id="pName" placeholder="GB 1">
+  <label>Kiasi cha GB</label>
+  <input id="pGB" type="number" min="1">
+  <label>Bei (TSh)</label>
+  <input id="pPrice" type="number" min="100">
+  <label>Muda (miezi)</label>
+  <input id="pValidity" type="number" min="1" value="2">
+  <label>Mpangilio</label>
+  <input id="pSort" type="number" value="1">
+  <label>Hali</label>
+  <select id="pActive">
+   <option value="true">Kionekane kwa wateja</option>
+   <option value="false">Kifiche kwa wateja</option>
+  </select>
+  <button id="savePackage" style="width:100%">Hifadhi kifurushi</button>
+  <button id="cancelEdit" class="secondary hidden" style="width:100%;margin-top:7px">Ghairi</button>
+  <div id="packageMsg"></div>
+ </div>
+
+ <div class="panel">
+  <h2>Simamia vifurushi</h2>
+  <button id="refreshPackages">Refresh</button>
+  <div id="adminPackages"></div>
+ </div>
+
+ <div class="panel">
+  <h2>Oda za wateja</h2>
+  <button id="refreshOrders">Refresh oda</button>
+  <div id="adminOrders"></div>
+ </div>
+</section>
+</main>
+<footer>GBPESA GB SHOP · Tumia huduma kwa uwajibikaji</footer>
 
 <script>
-const SUPABASE_URL =
- 'https://ulrfwwgjmqieiazktwuq.supabase.co';
+const SUPABASE_URL="https://ulrfwwgjmqieiazktwuq.supabase.co";
+const SUPABASE_KEY="sb_publishable_OZXmFzpFoYNHAN9c28khAA_zx7Llw7M";
+const WHATSAPP_NUMBER="255XXXXXXXXX";
 
-const SUPABASE_KEY =
- 'sb_publishable_OZXmFzpFoYNHAN9c28khAA_zx7Llw7M';
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let user=null,isAdmin=false,packages=[],chosen=null;
 
-const db = window.supabase.createClient(
- SUPABASE_URL, SUPABASE_KEY
-);
+const $=id=>document.getElementById(id);
+const money=n=>Number(n).toLocaleString("en-US");
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
 
-let currentUser = null;
-let isAdmin = false;
-
-function money(n){
- return 'TSh ' + Number(n || 0).toLocaleString('en-US');
+function msg(id,text,error=false){
+ $(id).innerHTML=`<div class="${error?"msg err":"msg"}">${esc(text)}</div>`;
 }
 
-function message(id,text,error=false){
- const el=document.getElementById(id);
- el.textContent=text;
- el.className=error?'error':'success';
-}
-
-function showAuth(type){
- document.getElementById('loginForm').classList.toggle(
-  'hidden',type!=='login');
- document.getElementById('signupForm').classList.toggle(
-  'hidden',type!=='signup');
- document.getElementById('authMessage').textContent='';
-}
-
-async function signup(){
- const name=document.getElementById('signupName').value.trim();
- const email=document.getElementById('signupEmail').value.trim();
- const password=document.getElementById('signupPassword').value;
-
- if(!name || !email || password.length<8){
-  message('authMessage','Jaza taarifa zote. Password iwe na herufi 8 au zaidi.',true);
-  return;
- }
-
- const {data,error}=await db.auth.signUp({
-  email,password,
-  options:{data:{full_name:name}}
+function page(name){
+ if(name==="admin"&&!isAdmin)return;
+ document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
+ $(name).classList.remove("hidden");
+ document.querySelectorAll("nav button[data-page]").forEach(b=>{
+  b.classList.toggle("active",b.dataset.page===name);
  });
-
- if(error){
-  message('authMessage',error.message,true);
-  return;
- }
-
- message('authMessage',
-  data.session
-  ? 'Akaunti imefunguliwa!'
-  : 'Akaunti imeundwa. Angalia email yako kuthibitisha usajili.');
+ if(name==="orders")loadMyOrders();
+ if(name==="admin")loadAdmin();
 }
 
-async function login(){
- const email=document.getElementById('loginEmail').value.trim();
- const password=document.getElementById('loginPassword').value;
+document.querySelectorAll("nav button[data-page]").forEach(b=>{
+ b.onclick=()=>page(b.dataset.page);
+});
 
- const {error}=await db.auth.signInWithPassword({
-  email,password
+async function checkUser(){
+ const {data:{user:u}}=await db.auth.getUser();
+ user=u;
+ isAdmin=false;
+ if(user){
+  const {data:p,error}=await db.from("profiles")
+   .select("role,full_name").eq("id",user.id).maybeSingle();
+  if(!error)isAdmin=p?.role==="admin";
+  $("authPanel").classList.add("hidden");
+  $("userPanel").classList.remove("hidden");
+  $("userEmail").textContent=user.email||"";
+  $("userRole").textContent=isAdmin?"Admin GBPESA":"Mteja";
+ }else{
+  $("authPanel").classList.remove("hidden");
+  $("userPanel").classList.add("hidden");
+ }
+ $("adminTab").classList.toggle("hidden",!isAdmin);
+}
+
+async function loadPackages(){
+ const {data,error}=await db.from("gb_packages").select("*")
+  .eq("is_active",true).order("sort_order");
+ if(error){$("packages").textContent=error.message;return;}
+ packages=data||[];
+ $("packages").innerHTML=packages.length?packages.map(p=>`
+  <div class="package">
+   <h3>${esc(p.package_name)}</h3>
+   <div class="price">TSh ${money(p.price_tzs)}</div>
+   <p>${esc(p.gb_amount)} GB</p>
+   <p class="small">Miezi ${esc(p.validity_months)}</p>
+   <button data-buy="${p.id}" style="width:100%">Nunua sasa</button>
+  </div>`).join(""):"Hakuna vifurushi kwa sasa.";
+}
+
+$("packages").addEventListener("click",e=>{
+ const b=e.target.closest("[data-buy]");
+ if(!b)return;
+ if(!user){page("account");msg("authMsg","Ingia kwanza ili kuendelea.",true);return;}
+ chosen=packages.find(p=>p.id===b.dataset.buy);
+ if(!chosen)return;
+ $("chosen").innerHTML=`<div class="notice"><b>${esc(chosen.package_name)}</b><br>${chosen.gb_amount} GB · TSh ${money(chosen.price_tzs)} · Miezi ${chosen.validity_months}</div>`;
+ $("buyPanel").classList.remove("hidden");
+ $("buyMsg").innerHTML="";
+ $("buyPanel").scrollIntoView({behavior:"smooth"});
+});
+
+$("createOrder").onclick=async()=>{
+ if(!user||!chosen)return;
+ const phone=$("recipient").value.trim();
+ if(!/^(0[67][0-9]{8}|255[67][0-9]{8})$/.test(phone)){
+  msg("buyMsg","Namba ya simu si sahihi.",true);return;
+ }
+ $("createOrder").disabled=true;
+ const {data,error}=await db.rpc("gb_create_order",{
+  p_package_id:chosen.id,p_recipient_phone:phone
  });
+ $("createOrder").disabled=false;
+ if(error){msg("buyMsg",error.message,true);return;}
+ msg("buyMsg","Oda imetengenezwa: "+data.order_number);
+ await loadMyOrders();
+};
 
- if(error){
-  message('authMessage',error.message,true);
- }
+async function loadMyOrders(){
+ if(!user){$("myOrders").textContent="Ingia kwanza.";return;}
+ $("myOrders").textContent="Inapakia...";
+ const {data,error}=await db.from("gb_orders").select("*")
+  .eq("user_id",user.id).order("created_at",{ascending:false});
+ if(error){$("myOrders").textContent=error.message;return;}
+ $("myOrders").innerHTML=(data||[]).length?data.map(o=>`
+  <div class="order">
+   <b>${esc(o.order_number)}</b>
+   <p>${esc(o.package_name)} · ${o.gb_amount} GB</p>
+   <p>TSh ${money(o.price_tzs)} · ${esc(o.recipient_phone)}</p>
+   <p>Hali: <b>${esc(o.status)}</b></p>
+   ${o.status==="pending_payment"?`
+    <label>Reference ya muamala</label>
+    <input id="ref-${o.id}" placeholder="Namba ya muamala">
+    <button data-payment="${o.id}">Wasilisha malipo</button>`:""}
+   ${o.status==="payment_submitted"?"<p class='small'>Inasubiri uhakiki wa Admin.</p>":""}
+   ${o.admin_note?`<p>${esc(o.admin_note)}</p>`:""}
+  </div>`).join(""):"Bado huna oda.";
 }
 
-async function logout(){
- await db.auth.signOut();
-}
-
-async function loadDashboard(){
- if(!currentUser)return;
-
- const {data:profile,error:pError}=await db
-  .from('profiles')
-  .select('full_name,role')
-  .eq('id',currentUser.id)
-  .maybeSingle();
-
- if(pError){
-  alert('Imeshindikana kusoma profile: '+pError.message);
-  return;
- }
-
- isAdmin=profile?.role==='admin';
-
- document.getElementById('customerName').textContent=
-  profile?.full_name || currentUser.email;
-
- document.getElementById('adminTab').classList.toggle(
-  'hidden',!isAdmin);
-
- const {data:wallet,error}=await db
-  .from('wallets')
-  .select('balance')
-  .eq('user_id',currentUser.id)
-  .maybeSingle();
-
- if(error){
-  alert('Tatizo la kusoma salio: '+error.message);
-  return;
- }
-
- document.getElementById('balance').textContent=
-  money(wallet?.balance || 0);
-}
-
-function showPage(page){
- const pages=['home','deposit','withdraw','history','admin'];
-
- pages.forEach(p=>{
-  const el=document.getElementById(p+'Page');
-  if(el)el.classList.toggle('hidden',p!==page);
+$("myOrders").addEventListener("click",async e=>{
+ const b=e.target.closest("[data-payment]");
+ if(!b)return;
+ const id=b.dataset.payment;
+ const ref=$("ref-"+id).value.trim();
+ if(ref.length<3){alert("Weka reference sahihi.");return;}
+ b.disabled=true;
+ const {error}=await db.rpc("gb_submit_payment",{
+  p_order_id:id,p_transaction_reference:ref
  });
-
- if(page==='history')loadHistory();
- if(page==='admin' && isAdmin)loadAdmin();
-}
-
-async function createDeposit(){
- const amount=Number(
-  document.getElementById('depositAmount').value
- );
-
- if(!Number.isFinite(amount)||amount<1000){
-  message('depositMessage','Kiasi cha chini ni TSh 1,000.',true);
-  return;
- }
-
- const {data,error}=await db
-  .from('deposit_requests')
-  .insert({
-   user_id:currentUser.id,
-   amount:amount,
-   provider:'FimiPay'
-  })
-  .select('id')
-  .single();
-
- if(error){
-  message('depositMessage',error.message,true);
-  return;
- }
-
- message('depositMessage',
-  'Ombi limehifadhiwa. Namba ya ombi: '+data.id+
-  '. Bado halijalipwa wala salio halijaongezwa.');
-}
-
-async function createWithdrawal(){
- const phone=document.getElementById('withdrawPhone').value.trim();
- const amount=Number(
-  document.getElementById('withdrawAmount').value
- );
-
- if(!phone || !Number.isFinite(amount)||amount<5000){
-  message('withdrawMessage',
-   'Weka namba sahihi na kiasi kisichopungua TSh 5,000.',true);
-  return;
- }
-
- const {data:wallet,error:wError}=await db
-  .from('wallets')
-  .select('balance')
-  .eq('user_id',currentUser.id)
-  .single();
-
- if(wError){
-  message('withdrawMessage',wError.message,true);
-  return;
- }
-
- if(Number(wallet.balance)<amount){
-  message('withdrawMessage','Salio lako halitoshi.',true);
-  return;
- }
-
- const {data,error}=await db
-  .from('withdrawal_requests')
-  .insert({
-   user_id:currentUser.id,
-   phone_number:phone,
-   amount:amount
-  })
-  .select('id')
-  .single();
-
- if(error){
-  message('withdrawMessage',error.message,true);
-  return;
- }
-
- message('withdrawMessage',
-  'Ombi limetumwa kwa Admin. Namba ya ombi: '+data.id+
-  '. Salio halijakatwa bado.');
-}
-
-async function loadHistory(){
- const box=document.getElementById('historyList');
- box.textContent='Inapakia...';
-
- const {data,error}=await db
-  .from('wallet_transactions')
-  .select('*')
-  .eq('user_id',currentUser.id)
-  .order('created_at',{ascending:false})
-  .limit(50);
-
- if(error){
-  box.textContent=error.message;
-  return;
- }
-
- box.innerHTML=data.length
-  ? data.map(x=>`
-   <div class="notice">
-    <strong>${escapeHTML(x.type)}</strong><br>
-    ${money(x.amount)} · ${escapeHTML(x.status)}<br>
-    <small>${new Date(x.created_at).toLocaleString()}</small>
-   </div>`).join('')
-  : 'Bado hakuna miamala.';
-}
+ if(error){b.disabled=false;alert(error.message);return;}
+ alert("Taarifa za malipo zimewasilishwa.");
+ await loadMyOrders();
+});
 
 async function loadAdmin(){
  if(!isAdmin)return;
+ await loadAdminPackages();
+ await loadAdminOrders();
+}
 
- const box=document.getElementById('adminList');
- box.textContent='Inapakia...';
+async function loadAdminPackages(){
+ const {data,error}=await db.from("gb_packages").select("*").order("sort_order");
+ if(error){$("adminPackages").textContent=error.message;return;}
+ $("adminPackages").innerHTML=(data||[]).map(p=>`
+  <div class="order">
+   <div class="row"><b>${esc(p.package_name)}</b><b>TSh ${money(p.price_tzs)}</b></div>
+   <p>${p.gb_amount} GB · Miezi ${p.validity_months}</p>
+   <p>${p.is_active?"Inaonekana":"Imefichwa"}</p>
+   <button data-edit="${p.id}">Badilisha</button>
+   <button class="danger" data-delete="${p.id}">Futa</button>
+  </div>`).join("")||"Hakuna vifurushi.";
+}
 
- const {data,error}=await db
-  .from('withdrawal_requests')
-  .select('id,user_id,amount,phone_number,status,created_at')
-  .order('created_at',{ascending:false})
-  .limit(100);
-
- if(error){
-  box.textContent=error.message;
-  return;
+$("adminPackages").addEventListener("click",async e=>{
+ const edit=e.target.closest("[data-edit]");
+ const del=e.target.closest("[data-delete]");
+ if(edit){
+  const p=packages.find(x=>x.id===edit.dataset.edit) ||
+   (await db.from("gb_packages").select("*").eq("id",edit.dataset.edit).single()).data;
+  if(!p)return;
+  $("editId").value=p.id;
+  $("pName").value=p.package_name;
+  $("pGB").value=p.gb_amount;
+  $("pPrice").value=p.price_tzs;
+  $("pValidity").value=p.validity_months;
+  $("pSort").value=p.sort_order;
+  $("pActive").value=String(p.is_active);
+  $("formTitle").textContent="Badilisha kifurushi";
+  $("cancelEdit").classList.remove("hidden");
+  $("formTitle").scrollIntoView({behavior:"smooth"});
  }
-
- box.innerHTML=data.length
-  ? data.map(x=>`
-   <div class="notice">
-    <strong>${money(x.amount)}</strong><br>
-    Simu: ${escapeHTML(x.phone_number)}<br>
-    Hali: ${escapeHTML(x.status)}<br>
-    Mteja: ${escapeHTML(x.user_id)}<br>
-    <small>${new Date(x.created_at).toLocaleString()}</small>
-   </div>`).join('')
-  : 'Hakuna maombi ya withdrawal.';
-}
-
-function escapeHTML(value){
- return String(value ?? '').replace(/[&<>"']/g,c=>({
-  '&':'&amp;','<':'&lt;','>':'&gt;',
-  '"':'&quot;',"'":'&#39;'
- }[c]));
-}
-
-async function refresh(){
- const {data}=await db.auth.getSession();
- currentUser=data.session?.user || null;
-
- document.getElementById('authSection')
-  .classList.toggle('hidden',!!currentUser);
- document.getElementById('dashboard')
-  .classList.toggle('hidden',!currentUser);
- document.getElementById('logoutBtn')
-  .classList.toggle('hidden',!currentUser);
-
- if(currentUser){
-  await loadDashboard();
-  showPage('home');
+ if(del){
+  if(!confirm("Una uhakika unataka kufuta kifurushi hiki?"))return;
+  const {error}=await db.from("gb_packages").delete().eq("id",del.dataset.delete);
+  if(error){alert(error.message);return;}
+  alert("Kifurushi kimefutwa. Historia ya oda imehifadhiwa.");
+  await loadAdminPackages();
+  await loadPackages();
  }
-}
-
-db.auth.onAuthStateChange((event,session)=>{
- currentUser=session?.user || null;
- setTimeout(refresh,0);
 });
 
-refresh();
+function resetForm(){
+ $("editId").value="";
+ $("pName").value="";
+ $("pGB").value="";
+ $("pPrice").value="";
+ $("pValidity").value=2;
+ $("pSort").value=1;
+ $("pActive").value="true";
+ $("formTitle").textContent="Ongeza kifurushi";
+ $("cancelEdit").classList.add("hidden");
+}
+$("cancelEdit").onclick=resetForm;
+
+$("savePackage").onclick=async()=>{
+ if(!isAdmin)return;
+ const name=$("pName").value.trim();
+ const gb=Number($("pGB").value);
+ const price=Number($("pPrice").value);
+ const validity=Number($("pValidity").value);
+ const sort=Number($("pSort").value);
+ if(!name||!Number.isInteger(gb)||gb<1||
+ !Number.isInteger(price)||price<100||
+ !Number.isInteger(validity)||validity<1){
+  msg("packageMsg","Jaza taarifa sahihi. Bei iwe angalau TSh 100.",true);return;
+ }
+ const record={
+  package_name:name,gb_amount:gb,price_tzs:price,
+  validity_months:validity,sort_order:sort,
+  is_active:$("pActive").value==="true"
+ };
+ const id=$("editId").value;
+ let result;
+ if(id){
+  result=await db.from("gb_packages").update(record).eq("id",id);
+ }else{
+  record.code="GB-"+Date.now();
+  result=await db.from("gb_packages").insert(record);
+ }
+ if(result.error){msg("packageMsg",result.error.message,true);return;}
+ msg("packageMsg","Kifurushi kimehifadhiwa.");
+ resetForm();
+ await loadAdminPackages();
+ await loadPackages();
+};
+
+async function loadAdminOrders(){
+ if(!isAdmin)return;
+ const {data,error}=await db.from("gb_orders").select("*")
+  .order("created_at",{ascending:false}).limit(200);
+ if(error){$("adminOrders").textContent=error.message;return;}
+ $("adminOrders").innerHTML=(data||[]).map(o=>`
+  <div class="order">
+   <b>${esc(o.order_number)}</b>
+   <p>${esc(o.package_name)} · ${o.gb_amount} GB</p>
+   <p>Bei: TSh ${money(o.price_tzs)}</p>
+   <p>Mpokeaji: ${esc(o.recipient_phone)}</p>
+   <p>Reference: ${esc(o.transaction_reference||"Haijawekwa")}</p>
+   <label>Hali ya oda</label>
+   <select id="status-${o.id}">
+    ${["pending_payment","payment_submitted","verified","delivered","rejected"].map(s=>
+    `<option value="${s}" ${o.status===s?"selected":""}>${s}</option>`).join("")}
+   </select>
+   <label>Maelezo ya Admin</label>
+   <input id="note-${o.id}" value="${esc(o.admin_note||"")}">
+   <button data-save-order="${o.id}">Hifadhi mabadiliko</button>
+   <button data-wa="${o.id}" class="secondary">WhatsApp</button>
+  </div>`).join("")||"Hakuna oda.";
+}
+
+$("adminOrders").addEventListener("click",async e=>{
+ const save=e.target.closest("[data-save-order]");
+ const wa=e.target.closest("[data-wa]");
+ if(save){
+  const id=save.dataset.saveOrder;
+  const status=$("status-"+id).value;
+  const update={
+   status,admin_note:$("note-"+id).value.trim(),
+   updated_at:new Date().toISOString()
+  };
+  if(status==="delivered")update.delivered_at=new Date().toISOString();
+  const {error}=await db.from("gb_orders").update(update).eq("id",id);
+  if(error){alert(error.message);return;}
+  alert("Oda imesasishwa.");
+  await loadAdminOrders();
+ }
+ if(wa){
+  const id=wa.dataset.wa;
+  const {data:o}=await db.from("gb_orders").select("*").eq("id",id).single();
+  if(!o)return;
+  const text=`GBPESA GB SHOP\nOda: ${o.order_number}\nKifurushi: ${o.package_name}\nGB: ${o.gb_amount}\nMpokeaji: ${o.recipient_phone}\nHali: ${o.status}`;
+  window.open("https://wa.me+255702715377+"?text="+encodeURIComponent(text),"_blank");
+ }
+});
+
+$("refreshPackages").onclick=loadAdminPackages;
+$("refreshOrders").onclick=loadAdminOrders;
+
+$("login").onclick=async()=>{
+ const {error}=await db.auth.signInWithPassword({
+  email:$("email").value.trim(),password:$("password").value
+ });
+ if(error){msg("authMsg",error.message,true);return;}
+ await checkUser();
+ await loadPackages();
+ page("shop");
+};
+
+$("register").onclick=async()=>{
+ const name=$("fullName").value.trim();
+ const phone=$("phone").value.trim();
+ const email=$("newEmail").value.trim();
+ const password=$("newPassword").value;
+ if(!name||!email||password.length<6){
+  msg("authMsg","Jaza jina, email na password sahihi.",true);return;
+ }
+ if(phone&&!/^(0[67][0-9]{8}|255[67][0-9]{8})$/.test(phone)){
+  msg("authMsg","Namba ya simu si sahihi.",true);return;
+ }
+ const {data,error}=await db.auth.signUp({
+  email,password,
+  options:{data:{full_name:name,phone}}
+ });
+ if(error){msg("authMsg",error.message,true);return;}
+ if(data.user && data.session){
+  const {error:pe}=await db.from("profiles").upsert({
+   id:data.user.id,full_name:name,phone,role:"user"
+  },{onConflict:"id"});
+  if(pe)console.error("Profile:",pe.message);
+  await checkUser();
+  page("shop");
+  msg("authMsg","Akaunti imefunguliwa.");
+ }else{
+  msg("authMsg","Jisajili kumekamilika. Thibitisha email yako kisha ingia.");
+ }
+};
+
+$("logout").onclick=async()=>{
+ await db.auth.signOut();
+ await checkUser();
+ page("shop");
+};
+
+db.auth.onAuthStateChange(()=>{
+ setTimeout(async()=>{await checkUser();},300);
+});
+
+async function start(){
+ await checkUser();
+ await loadPackages();
+}
+start();
 </script>
 </body>
 </html>
