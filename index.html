@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GBPESA</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg:#090d16;
+  --panel:#151c2b;
+  --panel2:#1d2638;
+  --red:#ed343e;
+  --green:#16c784;
+  --gold:#ffc857;
+  --white:#fff;
+  --muted:#9ba8bb;
+}
+*{box-sizing:border-box}
+body{
+ margin:0;background:var(--bg);color:var(--white);
+ font-family:Arial,sans-serif;
+}
+header{
+ padding:17px 20px;background:#111827;
+ display:flex;justify-content:space-between;
+ align-items:center;border-bottom:1px solid #293448;
+}
+.logo{font-size:25px;font-weight:900;letter-spacing:1px}
+.logo span{color:var(--green)}
+header button{width:auto}
+.container{max-width:950px;margin:auto;padding:18px}
+.card{
+ background:var(--panel);padding:20px;
+ border:1px solid #293448;border-radius:15px;margin-bottom:16px;
+}
+h2,h3{margin-top:0}
+input{
+ width:100%;padding:14px;margin:8px 0 14px;
+ background:#0d1421;color:white;
+ border:1px solid #35435a;border-radius:9px;
+ font-size:15px;
+}
+button{
+ border:0;border-radius:9px;padding:13px 17px;
+ background:var(--green);color:#07130e;
+ font-weight:bold;cursor:pointer;font-size:14px;
+}
+button:disabled{opacity:.5}
+button.secondary{background:#344258;color:white}
+button.red{background:var(--red);color:white}
+button.gold{background:var(--gold);color:#171000}
+button.full{width:100%}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}
+.tabs button{flex:1;min-width:100px}
+.hidden{display:none!important}
+.muted{color:var(--muted);font-size:13px}
+.balance{
+ font-size:34px;color:var(--green);font-weight:900;
+ margin:12px 0;
+}
+.game{
+ background:radial-gradient(ellipse at 50% 100%,#38202b,#101827 65%);
+ min-height:260px;border-radius:15px;
+ display:flex;flex-direction:column;
+ justify-content:center;align-items:center;
+ overflow:hidden;position:relative;
+ border:1px solid #49323d;
+}
+.multiplier{font-size:54px;font-weight:900;color:#fff}
+.plane{font-size:65px;transform:rotate(-12deg)}
+.game small{color:#c5ccd9}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{background:var(--panel2);padding:15px;border-radius:10px}
+.stat strong{display:block;font-size:19px;margin-top:8px}
+.notice{padding:12px;border-radius:9px;background:#252d3b;
+ color:#dce5f4;font-size:13px;margin:12px 0}
+.success{color:var(--green)}
+.error{color:#ff6971}
+label{font-size:13px;color:#c5ccd9}
+footer{text-align:center;color:#78869a;padding:25px;font-size:12px}
+@media(max-width:480px){
+ .container{padding:12px}
+ .grid{grid-template-columns:1fr}
+ .balance{font-size:29px}
+}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="logo">GB<span>PESA</span></div>
+ <button id="logoutBtn" class="secondary hidden"
+ onclick="logout()">Toka</button>
+</header>
+
+<div class="container">
+
+<!-- AUTH -->
+<section id="authSection">
+ <div class="card">
+  <h2>Karibu GBPESA</h2>
+  <p class="muted">Fungua akaunti au ingia kwenye akaunti yako.</p>
+
+  <div class="tabs">
+   <button onclick="showAuth('login')">INGIA</button>
+   <button class="secondary" onclick="showAuth('signup')">JISAJILI</button>
+  </div>
+
+  <div id="loginForm">
+   <label>Email</label>
+   <input id="loginEmail" type="email" placeholder="Email yako">
+   <label>Password</label>
+   <input id="loginPassword" type="password" placeholder="Password">
+   <button class="full" onclick="login()">INGIA KWENYE AKAUNTI</button>
+  </div>
+
+  <div id="signupForm" class="hidden">
+   <label>Jina kamili</label>
+   <input id="signupName" placeholder="Jina lako">
+   <label>Email</label>
+   <input id="signupEmail" type="email" placeholder="Email yako">
+   <label>Password</label>
+   <input id="signupPassword" type="password"
+    minlength="8" placeholder="Password (angalau herufi 8)">
+   <button class="full" onclick="signup()">FUNGUA AKAUNTI</button>
+  </div>
+  <p id="authMessage" class="muted"></p>
+ </div>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="hidden">
+ <div class="card">
+  <p class="muted">Karibu, <strong id="customerName">Mteja</strong></p>
+  <p class="muted">SALIO LA AKAUNTI</p>
+  <div class="balance" id="balance">TSh 0</div>
+  <div class="grid">
+   <button onclick="showPage('deposit')">+ DEPOSIT</button>
+   <button class="gold" onclick="showPage('withdraw')">WITHDRAW</button>
+  </div>
+ </div>
+
+ <div class="tabs">
+  <button onclick="showPage('home')">Nyumbani</button>
+  <button class="secondary" onclick="showPage('deposit')">Deposit</button>
+  <button class="secondary" onclick="showPage('withdraw')">Withdraw</button>
+  <button class="secondary" onclick="showPage('history')">Historia</button>
+  <button id="adminTab" class="red hidden"
+   onclick="showPage('admin')">Admin</button>
+ </div>
+
+ <!-- HOME -->
+ <div id="homePage">
+  <div class="card">
+   <h2>GBPESA AVIATOR</h2>
+   <div class="game">
+    <small>AVIATOR STYLE · DEMO PREVIEW</small>
+    <div class="plane">✈️</div>
+    <div class="multiplier">1.00x</div>
+    <small>Mchezo wa majaribio</small>
+   </div>
+   <div class="notice">
+    Hili ni eneo la muonekano wa mchezo tu. Hakuna dau,
+    ushindi wa fedha au utoaji wa fedha unaofanyika hapa.
+   </div>
+  </div>
+  <div class="card">
+   <h3>Huduma za GBPESA</h3>
+   <p class="muted">Deposit, withdrawal na historia ya akaunti yako.</p>
+  </div>
+ </div>
+
+ <!-- DEPOSIT -->
+ <div id="depositPage" class="hidden">
+  <div class="card">
+   <h2>Weka Pesa (Deposit)</h2>
+   <p class="muted">Weka kiasi unachotaka kulipia.</p>
+   <label>Kiasi (TSh)</label>
+   <input id="depositAmount" type="number" min="1000"
+    step="100" placeholder="Mfano 10000">
+   <button class="full" onclick="createDeposit()">
+    ENDELEA NA DEPOSIT
+   </button>
+   <p id="depositMessage" class="muted"></p>
+   <div class="notice">
+    Muunganisho wa FimiPay bado haujawashwa.
+    Ombi hili halimaanishi kuwa malipo yamepokelewa.
+   </div>
+  </div>
+ </div>
+
+ <!-- WITHDRAW -->
+ <div id="withdrawPage" class="hidden">
+  <div class="card">
+   <h2>Toa Pesa (Withdrawal)</h2>
+   <p class="muted">Kiwango cha chini ni TSh 5,000.</p>
+   <label>Namba ya simu inayopokea pesa</label>
+   <input id="withdrawPhone" type="tel"
+    placeholder="Mfano 07XXXXXXXX">
+   <label>Kiasi cha kutoa (TSh)</label>
+   <input id="withdrawAmount" type="number"
+    min="5000" step="100" placeholder="5000">
+   <button class="full gold" onclick="createWithdrawal()">
+    TUMA OMBI LA WITHDRAWAL
+   </button>
+   <p id="withdrawMessage" class="muted"></p>
+   <div class="notice">
+    Maombi yatatumwa kwa Admin kwa ajili ya ukaguzi.
+    Kutuma ombi si uthibitisho wa kulipwa.
+   </div>
+  </div>
+ </div>
+
+ <!-- HISTORY -->
+ <div id="historyPage" class="hidden">
+  <div class="card">
+   <h2>Historia ya Miamala</h2>
+   <div id="historyList" class="muted">Inapakia...</div>
+  </div>
+ </div>
+
+ <!-- ADMIN -->
+ <div id="adminPage" class="hidden">
+  <div class="card">
+   <h2>GBPESA ADMIN</h2>
+   <p class="muted">Maombi ya withdrawal</p>
+   <button class="secondary" onclick="loadAdmin()">Refresh</button>
+   <div id="adminList"></div>
+  </div>
+ </div>
+
+</section>
+</div>
+
+<footer>GBPESA · Tumia huduma kwa uwajibikaji</footer>
+
+<script>
+const SUPABASE_URL =
+ 'https://ulrfwwgjmqieiazktwuq.supabase.co';
+
+const SUPABASE_KEY =
+ 'sb_publishable_OZXmFzpFoYNHAN9c28khAA_zx7Llw7M';
+
+const db = window.supabase.createClient(
+ SUPABASE_URL, SUPABASE_KEY
+);
+
+let currentUser = null;
+let isAdmin = false;
+
+function money(n){
+ return 'TSh ' + Number(n || 0).toLocaleString('en-US');
+}
+
+function message(id,text,error=false){
+ const el=document.getElementById(id);
+ el.textContent=text;
+ el.className=error?'error':'success';
+}
+
+function showAuth(type){
+ document.getElementById('loginForm').classList.toggle(
+  'hidden',type!=='login');
+ document.getElementById('signupForm').classList.toggle(
+  'hidden',type!=='signup');
+ document.getElementById('authMessage').textContent='';
+}
+
+async function signup(){
+ const name=document.getElementById('signupName').value.trim();
+ const email=document.getElementById('signupEmail').value.trim();
+ const password=document.getElementById('signupPassword').value;
+
+ if(!name || !email || password.length<8){
+  message('authMessage','Jaza taarifa zote. Password iwe na herufi 8 au zaidi.',true);
+  return;
+ }
+
+ const {data,error}=await db.auth.signUp({
+  email,password,
+  options:{data:{full_name:name}}
+ });
+
+ if(error){
+  message('authMessage',error.message,true);
+  return;
+ }
+
+ message('authMessage',
+  data.session
+  ? 'Akaunti imefunguliwa!'
+  : 'Akaunti imeundwa. Angalia email yako kuthibitisha usajili.');
+}
+
+async function login(){
+ const email=document.getElementById('loginEmail').value.trim();
+ const password=document.getElementById('loginPassword').value;
+
+ const {error}=await db.auth.signInWithPassword({
+  email,password
+ });
+
+ if(error){
+  message('authMessage',error.message,true);
+ }
+}
+
+async function logout(){
+ await db.auth.signOut();
+}
+
+async function loadDashboard(){
+ if(!currentUser)return;
+
+ const {data:profile,error:pError}=await db
+  .from('profiles')
+  .select('full_name,role')
+  .eq('id',currentUser.id)
+  .maybeSingle();
+
+ if(pError){
+  alert('Imeshindikana kusoma profile: '+pError.message);
+  return;
+ }
+
+ isAdmin=profile?.role==='admin';
+
+ document.getElementById('customerName').textContent=
+  profile?.full_name || currentUser.email;
+
+ document.getElementById('adminTab').classList.toggle(
+  'hidden',!isAdmin);
+
+ const {data:wallet,error}=await db
+  .from('wallets')
+  .select('balance')
+  .eq('user_id',currentUser.id)
+  .maybeSingle();
+
+ if(error){
+  alert('Tatizo la kusoma salio: '+error.message);
+  return;
+ }
+
+ document.getElementById('balance').textContent=
+  money(wallet?.balance || 0);
+}
+
+function showPage(page){
+ const pages=['home','deposit','withdraw','history','admin'];
+
+ pages.forEach(p=>{
+  const el=document.getElementById(p+'Page');
+  if(el)el.classList.toggle('hidden',p!==page);
+ });
+
+ if(page==='history')loadHistory();
+ if(page==='admin' && isAdmin)loadAdmin();
+}
+
+async function createDeposit(){
+ const amount=Number(
+  document.getElementById('depositAmount').value
+ );
+
+ if(!Number.isFinite(amount)||amount<1000){
+  message('depositMessage','Kiasi cha chini ni TSh 1,000.',true);
+  return;
+ }
+
+ const {data,error}=await db
+  .from('deposit_requests')
+  .insert({
+   user_id:currentUser.id,
+   amount:amount,
+   provider:'FimiPay'
+  })
+  .select('id')
+  .single();
+
+ if(error){
+  message('depositMessage',error.message,true);
+  return;
+ }
+
+ message('depositMessage',
+  'Ombi limehifadhiwa. Namba ya ombi: '+data.id+
+  '. Bado halijalipwa wala salio halijaongezwa.');
+}
+
+async function createWithdrawal(){
+ const phone=document.getElementById('withdrawPhone').value.trim();
+ const amount=Number(
+  document.getElementById('withdrawAmount').value
+ );
+
+ if(!phone || !Number.isFinite(amount)||amount<5000){
+  message('withdrawMessage',
+   'Weka namba sahihi na kiasi kisichopungua TSh 5,000.',true);
+  return;
+ }
+
+ const {data:wallet,error:wError}=await db
+  .from('wallets')
+  .select('balance')
+  .eq('user_id',currentUser.id)
+  .single();
+
+ if(wError){
+  message('withdrawMessage',wError.message,true);
+  return;
+ }
+
+ if(Number(wallet.balance)<amount){
+  message('withdrawMessage','Salio lako halitoshi.',true);
+  return;
+ }
+
+ const {data,error}=await db
+  .from('withdrawal_requests')
+  .insert({
+   user_id:currentUser.id,
+   phone_number:phone,
+   amount:amount
+  })
+  .select('id')
+  .single();
+
+ if(error){
+  message('withdrawMessage',error.message,true);
+  return;
+ }
+
+ message('withdrawMessage',
+  'Ombi limetumwa kwa Admin. Namba ya ombi: '+data.id+
+  '. Salio halijakatwa bado.');
+}
+
+async function loadHistory(){
+ const box=document.getElementById('historyList');
+ box.textContent='Inapakia...';
+
+ const {data,error}=await db
+  .from('wallet_transactions')
+  .select('*')
+  .eq('user_id',currentUser.id)
+  .order('created_at',{ascending:false})
+  .limit(50);
+
+ if(error){
+  box.textContent=error.message;
+  return;
+ }
+
+ box.innerHTML=data.length
+  ? data.map(x=>`
+   <div class="notice">
+    <strong>${escapeHTML(x.type)}</strong><br>
+    ${money(x.amount)} · ${escapeHTML(x.status)}<br>
+    <small>${new Date(x.created_at).toLocaleString()}</small>
+   </div>`).join('')
+  : 'Bado hakuna miamala.';
+}
+
+async function loadAdmin(){
+ if(!isAdmin)return;
+
+ const box=document.getElementById('adminList');
+ box.textContent='Inapakia...';
+
+ const {data,error}=await db
+  .from('withdrawal_requests')
+  .select('id,user_id,amount,phone_number,status,created_at')
+  .order('created_at',{ascending:false})
+  .limit(100);
+
+ if(error){
+  box.textContent=error.message;
+  return;
+ }
+
+ box.innerHTML=data.length
+  ? data.map(x=>`
+   <div class="notice">
+    <strong>${money(x.amount)}</strong><br>
+    Simu: ${escapeHTML(x.phone_number)}<br>
+    Hali: ${escapeHTML(x.status)}<br>
+    Mteja: ${escapeHTML(x.user_id)}<br>
+    <small>${new Date(x.created_at).toLocaleString()}</small>
+   </div>`).join('')
+  : 'Hakuna maombi ya withdrawal.';
+}
+
+function escapeHTML(value){
+ return String(value ?? '').replace(/[&<>"']/g,c=>({
+  '&':'&amp;','<':'&lt;','>':'&gt;',
+  '"':'&quot;',"'":'&#39;'
+ }[c]));
+}
+
+async function refresh(){
+ const {data}=await db.auth.getSession();
+ currentUser=data.session?.user || null;
+
+ document.getElementById('authSection')
+  .classList.toggle('hidden',!!currentUser);
+ document.getElementById('dashboard')
+  .classList.toggle('hidden',!currentUser);
+ document.getElementById('logoutBtn')
+  .classList.toggle('hidden',!currentUser);
+
+ if(currentUser){
+  await loadDashboard();
+  showPage('home');
+ }
+}
+
+db.auth.onAuthStateChange((event,session)=>{
+ currentUser=session?.user || null;
+ setTimeout(refresh,0);
+});
+
+refresh();
+</script>
+</body>
+</html>
