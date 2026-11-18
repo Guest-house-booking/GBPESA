@@ -55,7 +55,6 @@ footer{text-align:center;padding:25px;color:#718078;font-size:12px}
  <div class="panel">
   <h2>Karibu GBPESA GB SHOP</h2>
   <p>Chagua kifurushi chako na weka namba ya simu inayopokea GB.</p>
-  <div class="notice">Vifurushi na bei husimamiwa na Admin.</div>
  </div>
  <div class="panel">
   <h2>Vifurushi vinavyopatikana</h2>
@@ -419,7 +418,7 @@ $("adminOrders").addEventListener("click",async e=>{
   const {data:o}=await db.from("gb_orders").select("*").eq("id",id).single();
   if(!o)return;
   const text=`GBPESA GB SHOP\nOda: ${o.order_number}\nKifurushi: ${o.package_name}\nGB: ${o.gb_amount}\nMpokeaji: ${o.recipient_phone}\nHali: ${o.status}`;
-  window.open("https://wa.me+255702715377+"?text="+encodeURIComponent(text),"_blank");
+  window.open("https://wa.me/255702715377?text="+encodeURIComponent(text),"_blank");
  }
 });
 
