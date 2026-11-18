@@ -2,64 +2,102 @@
 <html lang="sw">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GBPESA GB SHOP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#087f5b">
+<meta name="description" content="GBPESA GB SHOP - Nunua vifurushi vya GB kwa urahisi Tanzania. Huduma za vifurushi vya intaneti na usaidizi kwa wateja.">
+<title>GBPESA GB SHOP | Nunua GB Tanzania</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--g:#087f5b;--d:#07543e;--gold:#ffd166;--bg:#f3f7f5}
+:root{
+ --g:#087f5b;--d:#07543e;--gold:#ffd166;
+ --bg:#f3f7f5;--white:#fff;--text:#25342c;
+ --muted:#718078;--border:#e0e9e3;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:#25342c}
-header{background:var(--g);color:white;padding:22px 16px}
-header h1{margin:0;font-size:27px}
-header p{margin:8px 0 0;font-size:14px}
-nav{display:flex;gap:7px;overflow:auto;background:white;padding:10px;position:sticky;top:0;z-index:5}
-button{border:0;border-radius:9px;padding:12px 15px;background:var(--g);color:white;font-weight:bold;cursor:pointer}
-nav button{background:#e5f2eb;color:var(--d);white-space:nowrap}
+body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--text);line-height:1.6}
+header{background:linear-gradient(120deg,#07543e,#087f5b);color:white;padding:28px 17px}
+.header-inner{max-width:1000px;margin:auto}
+.logo{font-size:28px;font-weight:900;letter-spacing:-1px}
+.logo span{color:var(--gold)}
+header p{margin:5px 0}
+nav{display:flex;gap:7px;overflow-x:auto;background:white;padding:10px;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px #0000000a}
+nav button{background:#e5f2eb;color:var(--d);white-space:nowrap;flex-shrink:0}
 nav button.active{background:var(--g);color:white}
-main{max-width:850px;margin:auto;padding:13px}
-.panel{background:white;border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 3px 12px #0000000a}
-h2{color:var(--d);font-size:20px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
-.package,.order{border:1px solid #e0e9e3;border-radius:11px;padding:13px;margin:8px 0}
-.price{font-size:22px;color:var(--g);font-weight:bold}
-input,select,textarea{width:100%;padding:13px;border:1px solid #d5dfd9;border-radius:8px;margin:6px 0 13px;font-size:15px}
+button{border:0;border-radius:9px;padding:12px 15px;background:var(--g);color:white;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+main{max-width:950px;margin:auto;padding:14px}
+.panel{background:white;border-radius:14px;padding:18px;margin:13px 0;box-shadow:0 3px 12px #00000009}
+h2{color:var(--d);font-size:21px;margin-top:0}
+h3{color:var(--d)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.package,.order{border:1px solid var(--border);border-radius:12px;padding:14px;margin:8px 0}
+.package{background:#fff}
+.price{font-size:23px;color:var(--g);font-weight:bold}
+input,select,textarea{width:100%;padding:13px;border:1px solid #d5dfd9;border-radius:8px;margin:6px 0 13px;font-size:15px;background:white}
 label{font-size:13px;font-weight:bold}
-.small{font-size:12px;color:#718078}
+.small{font-size:12px;color:var(--muted)}
 .hidden{display:none!important}
-.notice{padding:12px;background:#fff5d9;border-radius:9px;font-size:13px}
-.msg{padding:10px;border-radius:8px;margin-top:8px;background:#e5f5eb;color:#07543e}
+.notice{padding:13px;background:#fff5d9;border-radius:9px;font-size:13px}
+.msg{padding:11px;border-radius:8px;margin-top:8px;background:#e5f5eb;color:#07543e}
 .err{background:#ffe9e9;color:#a21b1b}
-.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .danger{background:#b52b37}
 .secondary{background:#64746a}
-footer{text-align:center;padding:25px;color:#718078;font-size:12px}
-@media(max-width:390px){main{padding:8px}.panel{padding:12px}}
+.hero{background:linear-gradient(130deg,#e2f5eb,#f9fff9);border:1px solid #cfe9d8}
+.hero h2{font-size:25px}
+.hero strong{color:var(--g)}
+.feature{padding:12px;background:#f4faf6;border-radius:10px;margin:8px 0}
+footer{background:#07543e;color:white;margin-top:30px;padding:27px 16px}
+.footer-inner{max-width:950px;margin:auto}
+.footer-links{display:flex;flex-wrap:wrap;gap:15px;margin:15px 0}
+.footer-links button{background:transparent;padding:3px;color:white;text-decoration:underline}
+footer a{color:#ffe5a0}
+.policy h3{margin-bottom:5px}
+.policy p,.policy li{font-size:14px}
+.contact-link{display:block;padding:12px;background:#f0f8f3;border-radius:9px;margin:8px 0;color:var(--d);text-decoration:none;font-weight:bold}
+@media(max-width:480px){
+ main{padding:8px}
+ .panel{padding:13px}
+ .grid{grid-template-columns:1fr}
+ .logo{font-size:24px}
+}
 </style>
 </head>
 <body>
 
 <header>
- <h1>GBPESA <span style="color:#ffd166">GB SHOP</span></h1>
- <p>Nunua GB kwa urahisi · Tanzania</p>
+ <div class="header-inner">
+  <div class="logo">GBPESA <span>GB SHOP</span></div>
+  <p>Nunua GB kwa urahisi · Tanzania</p>
+  <p class="small" style="color:#e3f5e9">Huduma za vifurushi vya intaneti kwa wateja wetu.</p>
+ </div>
 </header>
 
 <nav>
  <button class="active" data-page="shop">Nunua GB</button>
  <button data-page="orders">Oda zangu</button>
  <button data-page="account">Akaunti</button>
+ <button data-page="about">Kuhusu sisi</button>
+ <button data-page="contact">Mawasiliano</button>
+ <button data-page="faq">FAQ</button>
  <button data-page="admin" id="adminTab" class="hidden">Admin</button>
 </nav>
 
 <main>
+
+<!-- SHOP -->
 <section id="shop" class="page">
- <div class="panel">
+ <div class="panel hero">
   <h2>Karibu GBPESA GB SHOP</h2>
-  <p>Chagua kifurushi chako na weka namba ya simu inayopokea GB.</p>
+  <p>Unahitaji GB? Chagua kifurushi kinachokufaa na uweke namba ya simu inayopokea GB.</p>
+  <strong>Huduma ya vifurushi vya intaneti Tanzania.</strong>
  </div>
+
  <div class="panel">
   <h2>Vifurushi vinavyopatikana</h2>
-  <div id="packages" class="grid">Inapakia...</div>
+  <div id="packages" class="grid">Inapakia vifurushi...</div>
  </div>
+
  <div class="panel hidden" id="buyPanel">
   <h2>Thibitisha oda yako</h2>
   <div id="chosen"></div>
@@ -68,48 +106,223 @@ footer{text-align:center;padding:25px;color:#718078;font-size:12px}
   <button id="createOrder" style="width:100%">Tengeneza oda</button>
   <div id="buyMsg"></div>
  </div>
+
+ <div class="panel">
+  <h2>Kwa nini GBPESA GB SHOP?</h2>
+  <div class="feature">✓ Kuchagua vifurushi kulingana na mahitaji yako.</div>
+  <div class="feature">✓ Historia ya oda kupitia akaunti yako.</div>
+  <div class="feature">✓ Usaidizi wa wateja kupitia WhatsApp.</div>
+ </div>
 </section>
 
+<!-- ORDERS -->
 <section id="orders" class="page hidden">
  <div class="panel">
   <h2>Oda zangu</h2>
+  <p>Angalia historia na hali ya oda zako.</p>
   <div id="myOrders">Ingia kwanza.</div>
  </div>
 </section>
 
+<!-- ACCOUNT -->
 <section id="account" class="page hidden">
  <div class="panel" id="authPanel">
-  <h2>Ingia</h2>
+  <h2>Ingia kwenye akaunti</h2>
   <label>Email</label>
-  <input id="email" type="email" placeholder="Email">
+  <input id="email" type="email" placeholder="Email yako">
   <label>Password</label>
   <input id="password" type="password" placeholder="Password">
-  <button id="login" style="width:100%">Ingia kwenye akaunti</button>
+  <button id="login" style="width:100%">Ingia</button>
   <hr>
-  <h2>Jisajili</h2>
+  <h2>Fungua akaunti mpya</h2>
   <label>Jina kamili</label>
   <input id="fullName" placeholder="Jina lako">
   <label>Namba ya simu</label>
-  <input id="phone" placeholder="07XXXXXXXX">
+  <input id="phone" inputmode="tel" placeholder="07XXXXXXXX">
   <label>Email</label>
   <input id="newEmail" type="email" placeholder="Email">
   <label>Password</label>
   <input id="newPassword" type="password" placeholder="Angalau herufi 6">
-  <button id="register" style="width:100%">Fungua akaunti</button>
+  <button id="register" style="width:100%">Jisajili</button>
   <div id="authMsg"></div>
  </div>
+
  <div class="panel hidden" id="userPanel">
   <h2>Akaunti yangu</h2>
   <p id="userEmail"></p>
   <p id="userRole"></p>
-  <button id="logout">Toka</button>
+  <button id="logout">Toka kwenye akaunti</button>
  </div>
 </section>
 
+<!-- ABOUT -->
+<section id="about" class="page hidden">
+ <div class="panel">
+  <h2>Kuhusu GBPESA GB SHOP</h2>
+  <p>GBPESA GB SHOP ni biashara inayolenga kuwapatia wateja huduma za ununuzi wa vifurushi vya GB na intaneti kwa urahisi.</p>
+  <p>Tunajitahidi kutoa huduma yenye uwazi, maelezo sahihi ya vifurushi, na usaidizi kwa wateja wetu.</p>
+  <h3>Dira yetu</h3>
+  <p>Kuboresha upatikanaji wa huduma za vifurushi vya intaneti kupitia mfumo rahisi wa kidijitali.</p>
+  <h3>Huduma zetu</h3>
+  <ul>
+   <li>Uuzaji wa vifurushi vya GB vinavyoonyeshwa kwenye website.</li>
+   <li>Uundaji na ufuatiliaji wa oda.</li>
+   <li>Huduma kwa wateja kupitia njia rasmi za mawasiliano.</li>
+  </ul>
+  <h3>Eneo la biashara</h3>
+  <p>Kaliua, Tanzania.</p>
+ </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="page hidden">
+ <div class="panel">
+  <h2>Wasiliana nasi</h2>
+  <p>Tunakaribisha maswali, maoni na maombi ya msaada kuhusu oda na huduma zetu.</p>
+  <a class="contact-link" href="https://wa.me/255702715377" target="_blank">WhatsApp: +255 702 715 377</a>
+  <a class="contact-link" href="mailto:paulzakaria45@gmail.com">Email: paulzakaria45@gmail.com</a>
+  <div class="feature">
+   <b>Anuani ya posta</b><br>
+   P. O. Box 83, Kaliua, Tanzania
+  </div>
+  <p class="small">Kwa masuala ya oda, tafadhali taja namba ya oda yako unapowasiliana nasi.</p>
+ </div>
+</section>
+
+<!-- REFUND -->
+<section id="refund" class="page hidden">
+ <div class="panel policy">
+  <h2>Refund and Cancellation Policy</h2>
+  <p><b>Last updated: 19 November 2026</b></p>
+  <p>GBPESA GB SHOP inalenga kuhakikisha kila mteja anapata huduma aliyoagiza. Sera hii inaeleza namna tunavyoshughulikia malalamiko ya malipo, oda na marejesho.</p>
+
+  <h3>1. Oda ambazo hazijakamilika</h3>
+  <p>Mteja akilipa lakini kifurushi alichoagiza kisipowasilishwa, anaweza kuwasiliana nasi ili oda ichunguzwe na kurekebishwa au kurejeshewa fedha pale inapostahili.</p>
+
+  <h3>2. Malipo yaliyorudiwa</h3>
+  <p>Ikiwa mteja amelipa zaidi ya mara moja kwa oda ileile, atoe taarifa na vielelezo vya miamala ili malipo ya ziada yachunguzwe.</p>
+
+  <h3>3. Namba ya simu isiyo sahihi</h3>
+  <p>Mteja anawajibika kuthibitisha namba ya simu na kifurushi kabla ya kuwasilisha oda. Oda iliyokwisha kutekelezwa kwa namba iliyowekwa na mteja inaweza isiweze kurejeshewa fedha.</p>
+
+  <h3>4. Oda zilizofanikiwa</h3>
+  <p>Oda ambayo kifurushi kimewasilishwa kwa mafanikio kwa namba iliyothibitishwa kwa kawaida hairuhusu kurejeshewa fedha, isipokuwa pale sheria au uchunguzi wa tatizo unapohitaji hatua nyingine.</p>
+
+  <h3>5. Namna ya kuomba refund</h3>
+  <p>Mteja awasiliane nasi na atoe taarifa hizi:</p>
+  <ul>
+   <li>Namba ya oda.</li>
+   <li>Reference ya muamala.</li>
+   <li>Namba ya simu iliyotumika.</li>
+   <li>Maelezo ya tatizo.</li>
+  </ul>
+
+  <h3>6. Mawasiliano ya refund</h3>
+  <p>Email: paulzakaria45@gmail.com</p>
+  <p>WhatsApp: +255 702 715 377</p>
+  <p>Maombi yatachunguzwa na kushughulikiwa kulingana na hali ya muamala, masharti ya mtoa huduma wa malipo na sheria zinazotumika.</p>
+ </div>
+</section>
+
+<!-- PRIVACY -->
+<section id="privacy" class="page hidden">
+ <div class="panel policy">
+  <h2>Privacy Policy</h2>
+  <p><b>Last updated: 19 November 2026</b></p>
+  <p>GBPESA GB SHOP inaheshimu faragha ya wateja wake. Sera hii inaeleza taarifa tunazoweza kukusanya na matumizi yake.</p>
+
+  <h3>1. Taarifa tunazokusanya</h3>
+  <ul>
+   <li>Jina la mteja.</li>
+   <li>Email na namba ya simu.</li>
+   <li>Namba ya simu inayopokea kifurushi.</li>
+   <li>Taarifa za oda, malipo na transaction reference.</li>
+  </ul>
+
+  <h3>2. Matumizi ya taarifa</h3>
+  <p>Taarifa hutumika kusimamia akaunti, kutengeneza na kufuatilia oda, kuhakiki malipo, kutoa huduma kwa wateja na kuzuia matumizi mabaya.</p>
+
+  <h3>3. Uhifadhi wa taarifa</h3>
+  <p>Taarifa za akaunti na oda huhifadhiwa kwenye mifumo ya kidijitali inayotumika kuendesha huduma. Tunachukua hatua zinazofaa kulinda taarifa hizo.</p>
+
+  <h3>4. Kushirikisha taarifa</h3>
+  <p>Tunaweza kushirikisha taarifa zinazohitajika na watoa huduma wa malipo au huduma za kiufundi pale inapohitajika kutekeleza oda, kuthibitisha malipo au kutimiza wajibu wa kisheria.</p>
+
+  <h3>5. Usalama</h3>
+  <p>Tunatumia hatua za kiusalama kulinda taarifa. Hata hivyo, hakuna mfumo wa intaneti unaoweza kuhakikishiwa usalama wa asilimia 100.</p>
+
+  <h3>6. Haki za mteja</h3>
+  <p>Mteja anaweza kuwasiliana nasi kuhusu taarifa zake, marekebisho au maombi yanayohusu faragha yake.</p>
+
+  <h3>7. Mawasiliano</h3>
+  <p>Email: paulzakaria45@gmail.com</p>
+  <p>WhatsApp: +255 702 715 377</p>
+ </div>
+</section>
+
+<!-- TERMS -->
+<section id="terms" class="page hidden">
+ <div class="panel policy">
+  <h2>Terms and Conditions</h2>
+  <p><b>Last updated: 19 November 2026</b></p>
+
+  <h3>1. Kukubali masharti</h3>
+  <p>Kwa kutumia GBPESA GB SHOP, unakubali masharti haya na sera nyingine zinazohusiana na huduma zetu.</p>
+
+  <h3>2. Akaunti ya mteja</h3>
+  <p>Mteja anatakiwa kutoa taarifa sahihi wakati wa kujisajili na kulinda password yake. Hairuhusiwi kutumia akaunti ya mtu mwingine bila ruhusa.</p>
+
+  <h3>3. Vifurushi na bei</h3>
+  <p>Vifurushi, kiasi cha GB, muda wa matumizi na bei huonyeshwa kwenye website. Upatikanaji wa huduma unaweza kutegemea mtandao na masharti ya kifurushi husika.</p>
+
+  <h3>4. Oda</h3>
+  <p>Mteja anatakiwa kukagua kifurushi na namba ya mpokeaji kabla ya kutengeneza oda. Kutengeneza oda hakumaanishi moja kwa moja kuwa malipo yamekamilika.</p>
+
+  <h3>5. Malipo</h3>
+  <p>Malipo yatathibitishwa kupitia utaratibu rasmi wa malipo utakaokuwa umewezeshwa kwenye website. Mteja hapaswi kudhani oda imelipwa mpaka mfumo uonyeshe hali sahihi ya malipo.</p>
+
+  <h3>6. Uwasilishaji wa huduma</h3>
+  <p>Utekelezaji wa oda unaweza kuathiriwa na upatikanaji wa huduma, mtandao au hitilafu za watoa huduma wengine.</p>
+
+  <h3>7. Matumizi yasiyoruhusiwa</h3>
+  <p>Hairuhusiwi kuingilia mfumo, kutumia taarifa za malipo kwa udanganyifu au kujaribu kupata huduma kwa njia isiyo halali.</p>
+
+  <h3>8. Mabadiliko ya masharti</h3>
+  <p>GBPESA GB SHOP inaweza kusasisha masharti haya pale inapohitajika. Toleo jipya litawekwa kwenye ukurasa huu.</p>
+
+  <h3>9. Mawasiliano</h3>
+  <p>Email: paulzakaria45@gmail.com</p>
+  <p>WhatsApp: +255 702 715 377</p>
+  <p>Anuani: P. O. Box 83, Kaliua, Tanzania.</p>
+ </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="page hidden">
+ <div class="panel">
+  <h2>Maswali yanayoulizwa mara kwa mara</h2>
+  <h3>1. Ninawezaje kununua GB?</h3>
+  <p>Fungua akaunti, ingia, chagua kifurushi na fuata hatua za kutengeneza oda.</p>
+
+  <h3>2. Nawezaje kuona oda zangu?</h3>
+  <p>Ingia kwenye akaunti kisha chagua Oda zangu.</p>
+
+  <h3>3. Oda yangu haijakamilika. Nifanye nini?</h3>
+  <p>Wasiliana nasi kupitia WhatsApp au email na utaje namba ya oda.</p>
+
+  <h3>4. Nawezaje kuomba kurejeshewa fedha?</h3>
+  <p>Soma Refund Policy na uwasiliane na huduma kwa wateja ukiwa na taarifa za muamala.</p>
+
+  <h3>5. Nawezaje kupata msaada?</h3>
+  <p>WhatsApp: +255 702 715 377 au email: paulzakaria45@gmail.com.</p>
+ </div>
+</section>
+
+<!-- ADMIN -->
 <section id="admin" class="page hidden">
  <div class="panel">
   <h2>GBPESA ADMIN</h2>
-  <p>Usimamizi wa biashara ya GB.</p>
+  <p>Usimamizi wa vifurushi na oda za wateja.</p>
  </div>
 
  <div class="panel">
@@ -147,22 +360,48 @@ footer{text-align:center;padding:25px;color:#718078;font-size:12px}
   <div id="adminOrders"></div>
  </div>
 </section>
+
 </main>
-<footer>GBPESA GB SHOP · Tumia huduma kwa uwajibikaji</footer>
+
+<footer>
+ <div class="footer-inner">
+  <div class="logo">GBPESA <span>GB SHOP</span></div>
+  <p>Nunua GB kwa urahisi · Tanzania</p>
+  <div class="footer-links">
+   <button data-page="about">Kuhusu sisi</button>
+   <button data-page="contact">Mawasiliano</button>
+   <button data-page="refund">Refund Policy</button>
+   <button data-page="privacy">Privacy Policy</button>
+   <button data-page="terms">Terms and Conditions</button>
+   <button data-page="faq">FAQ</button>
+  </div>
+  <p>Email: <a href="mailto:paulzakaria45@gmail.com">paulzakaria45@gmail.com</a></p>
+  <p>WhatsApp: <a href="https://wa.me/255702715377">+255 702 715 377</a></p>
+  <p>P. O. Box 83, Kaliua, Tanzania</p>
+  <hr>
+  <p>© <span id="year"></span> GBPESA GB SHOP. Haki zote zimehifadhiwa.</p>
+ </div>
+</footer>
 
 <script>
+"use strict";
+
 const SUPABASE_URL="https://ulrfwwgjmqieiazktwuq.supabase.co";
 const SUPABASE_KEY="sb_publishable_OZXmFzpFoYNHAN9c28khAA_zx7Llw7M";
-const WHATSAPP_NUMBER="255XXXXXXXXX";
+const WHATSAPP_NUMBER="255702715377";
 
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
 let user=null,isAdmin=false,packages=[],chosen=null;
 
 const $=id=>document.getElementById(id);
 const money=n=>Number(n).toLocaleString("en-US");
+
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({
  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
 }[c]));
+
+$("year").textContent=new Date().getFullYear();
 
 function msg(id,text,error=false){
  $(id).innerHTML=`<div class="${error?"msg err":"msg"}">${esc(text)}</div>`;
@@ -170,16 +409,21 @@ function msg(id,text,error=false){
 
 function page(name){
  if(name==="admin"&&!isAdmin)return;
+
  document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
  $(name).classList.remove("hidden");
+
  document.querySelectorAll("nav button[data-page]").forEach(b=>{
   b.classList.toggle("active",b.dataset.page===name);
  });
+
  if(name==="orders")loadMyOrders();
  if(name==="admin")loadAdmin();
+
+ window.scrollTo({top:0,behavior:"smooth"});
 }
 
-document.querySelectorAll("nav button[data-page]").forEach(b=>{
+document.querySelectorAll("[data-page]").forEach(b=>{
  b.onclick=()=>page(b.dataset.page);
 });
 
@@ -187,10 +431,13 @@ async function checkUser(){
  const {data:{user:u}}=await db.auth.getUser();
  user=u;
  isAdmin=false;
+
  if(user){
   const {data:p,error}=await db.from("profiles")
    .select("role,full_name").eq("id",user.id).maybeSingle();
+
   if(!error)isAdmin=p?.role==="admin";
+
   $("authPanel").classList.add("hidden");
   $("userPanel").classList.remove("hidden");
   $("userEmail").textContent=user.email||"";
@@ -199,36 +446,58 @@ async function checkUser(){
   $("authPanel").classList.remove("hidden");
   $("userPanel").classList.add("hidden");
  }
+
  $("adminTab").classList.toggle("hidden",!isAdmin);
 }
 
 async function loadPackages(){
+ $("packages").textContent="Inapakia vifurushi...";
+
  const {data,error}=await db.from("gb_packages").select("*")
   .eq("is_active",true).order("sort_order");
- if(error){$("packages").textContent=error.message;return;}
+
+ if(error){
+  $("packages").textContent="Imeshindikana kupakia vifurushi: "+error.message;
+  return;
+ }
+
  packages=data||[];
+
  $("packages").innerHTML=packages.length?packages.map(p=>`
   <div class="package">
    <h3>${esc(p.package_name)}</h3>
    <div class="price">TSh ${money(p.price_tzs)}</div>
    <p>${esc(p.gb_amount)} GB</p>
    <p class="small">Miezi ${esc(p.validity_months)}</p>
-   <button data-buy="${p.id}" style="width:100%">Nunua sasa</button>
+   <button data-buy="${esc(p.id)}" style="width:100%">Nunua sasa</button>
   </div>`).join(""):"Hakuna vifurushi kwa sasa.";
 }
 
 $("packages").addEventListener("click",e=>{
  const b=e.target.closest("[data-buy]");
  if(!b)return;
- if(!user){page("account");msg("authMsg","Ingia kwanza ili kuendelea.",true);return;}
- chosen=packages.find(p=>p.id===b.dataset.buy);
+
+ if(!user){
+  page("account");
+  msg("authMsg","Ingia kwanza ili kuendelea.",true);
+  return;
+ }
+
+ chosen=packages.find(p=>String(p.id)===b.dataset.buy);
  if(!chosen)return;
- $("chosen").innerHTML=`<div class="notice"><b>${esc(chosen.package_name)}</b><br>${chosen.gb_amount} GB · TSh ${money(chosen.price_tzs)} · Miezi ${chosen.validity_months}</div>`;
+
+ $("chosen").innerHTML=`
+  <div class="notice">
+   <b>${esc(chosen.package_name)}</b><br>
+   ${esc(chosen.gb_amount)} GB ·
+   TSh ${money(chosen.price_tzs)} ·
+   Miezi ${esc(chosen.validity_months)}
+  </div>`;
+
  $("buyPanel").classList.remove("hidden");
  $("buyMsg").innerHTML="";
  $("buyPanel").scrollIntoView({behavior:"smooth"});
 });
-
 
 $("createOrder").onclick=async()=>{
  if(!user||!chosen)return;
@@ -240,25 +509,20 @@ $("createOrder").onclick=async()=>{
   return;
  }
 
- // Fungua dirisha mapema ili browser isizuie WhatsApp
  const waWindow=window.open("about:blank","_blank");
 
  $("createOrder").disabled=true;
 
- const {data,error}=await db.rpc("gb_create_order",{
-  p_package_id:chosen.id,
-  p_recipient_phone:phone
- });
+ try{
+  const {data,error}=await db.rpc("gb_create_order",{
+   p_package_id:chosen.id,
+   p_recipient_phone:phone
+  });
 
- $("createOrder").disabled=false;
+  if(error)throw error;
+  if(!data||!data.order_number)throw new Error("Oda haijarudisha taarifa kamili.");
 
- if(error){
-  if(waWindow)waWindow.close();
-  msg("buyMsg",error.message,true);
-  return;
- }
-
- const messageText=
+  const messageText=
 `HABARI GBPESA GB SHOP
 
 NINA ODA MPYA YA GB
@@ -273,43 +537,56 @@ Namba ya mpokeaji: ${data.recipient_phone}
 Tafadhali nisaidie kukamilisha oda yangu.
 Asante.`;
 
- const whatsappNumber="255702715377";
+  const whatsappLink=
+   "intent://send?phone="+WHATSAPP_NUMBER+
+   "&text="+encodeURIComponent(messageText)+
+   "#Intent;scheme=whatsapp;package=com.whatsapp.w4b;end";
 
- const encodedMessage=encodeURIComponent(messageText);
+  if(waWindow){
+   waWindow.location.href=whatsappLink;
+  }else{
+   window.location.href=whatsappLink;
+  }
 
-const whatsappLink=
- "intent://send?phone="+whatsappNumber+
- "&text="+encodedMessage+
- "#Intent;scheme=whatsapp;package=com.whatsapp.w4b;end";
+  msg("buyMsg","Oda imetengenezwa: "+data.order_number);
+  await loadMyOrders();
 
- if(waWindow){
-  waWindow.location.href=whatsappLink;
- }else{
-  window.location.href=whatsappLink;
+ }catch(error){
+  if(waWindow)waWindow.close();
+  msg("buyMsg",error.message||"Imeshindikana kutengeneza oda.",true);
+ }finally{
+  $("createOrder").disabled=false;
  }
-
- msg("buyMsg","Oda imetengenezwa: "+data.order_number);
-
- await loadMyOrders();
 };
 
 async function loadMyOrders(){
- if(!user){$("myOrders").textContent="Ingia kwanza.";return;}
+ if(!user){
+  $("myOrders").textContent="Ingia kwanza.";
+  return;
+ }
+
  $("myOrders").textContent="Inapakia...";
+
  const {data,error}=await db.from("gb_orders").select("*")
   .eq("user_id",user.id).order("created_at",{ascending:false});
- if(error){$("myOrders").textContent=error.message;return;}
+
+ if(error){
+  $("myOrders").textContent=error.message;
+  return;
+ }
+
  $("myOrders").innerHTML=(data||[]).length?data.map(o=>`
   <div class="order">
    <b>${esc(o.order_number)}</b>
-   <p>${esc(o.package_name)} · ${o.gb_amount} GB</p>
+   <p>${esc(o.package_name)} · ${esc(o.gb_amount)} GB</p>
    <p>TSh ${money(o.price_tzs)} · ${esc(o.recipient_phone)}</p>
    <p>Hali: <b>${esc(o.status)}</b></p>
    ${o.status==="pending_payment"?`
     <label>Reference ya muamala</label>
-    <input id="ref-${o.id}" placeholder="Namba ya muamala">
-    <button data-payment="${o.id}">Wasilisha malipo</button>`:""}
-   ${o.status==="payment_submitted"?"<p class='small'>Inasubiri uhakiki wa Admin.</p>":""}
+    <input id="ref-${esc(o.id)}" placeholder="Namba ya muamala">
+    <button data-payment="${esc(o.id)}">Wasilisha malipo</button>`:""}
+   ${o.status==="payment_submitted"?
+    "<p class='small'>Inasubiri uhakiki wa Admin.</p>":""}
    ${o.admin_note?`<p>${esc(o.admin_note)}</p>`:""}
   </div>`).join(""):"Bado huna oda.";
 }
@@ -317,14 +594,28 @@ async function loadMyOrders(){
 $("myOrders").addEventListener("click",async e=>{
  const b=e.target.closest("[data-payment]");
  if(!b)return;
+
  const id=b.dataset.payment;
  const ref=$("ref-"+id).value.trim();
- if(ref.length<3){alert("Weka reference sahihi.");return;}
+
+ if(ref.length<3){
+  alert("Weka reference sahihi.");
+  return;
+ }
+
  b.disabled=true;
+
  const {error}=await db.rpc("gb_submit_payment",{
-  p_order_id:id,p_transaction_reference:ref
+  p_order_id:id,
+  p_transaction_reference:ref
  });
- if(error){b.disabled=false;alert(error.message);return;}
+
+ if(error){
+  b.disabled=false;
+  alert(error.message);
+  return;
+ }
+
  alert("Taarifa za malipo zimewasilishwa.");
  await loadMyOrders();
 });
@@ -336,25 +627,42 @@ async function loadAdmin(){
 }
 
 async function loadAdminPackages(){
- const {data,error}=await db.from("gb_packages").select("*").order("sort_order");
- if(error){$("adminPackages").textContent=error.message;return;}
+ const {data,error}=await db.from("gb_packages").select("*")
+  .order("sort_order");
+
+ if(error){
+  $("adminPackages").textContent=error.message;
+  return;
+ }
+
  $("adminPackages").innerHTML=(data||[]).map(p=>`
   <div class="order">
-   <div class="row"><b>${esc(p.package_name)}</b><b>TSh ${money(p.price_tzs)}</b></div>
-   <p>${p.gb_amount} GB · Miezi ${p.validity_months}</p>
+   <div class="row">
+    <b>${esc(p.package_name)}</b>
+    <b>TSh ${money(p.price_tzs)}</b>
+   </div>
+   <p>${esc(p.gb_amount)} GB · Miezi ${esc(p.validity_months)}</p>
    <p>${p.is_active?"Inaonekana":"Imefichwa"}</p>
-   <button data-edit="${p.id}">Badilisha</button>
-   <button class="danger" data-delete="${p.id}">Futa</button>
+   <button data-edit="${esc(p.id)}">Badilisha</button>
+   <button class="danger" data-delete="${esc(p.id)}">Futa</button>
   </div>`).join("")||"Hakuna vifurushi.";
 }
 
 $("adminPackages").addEventListener("click",async e=>{
  const edit=e.target.closest("[data-edit]");
  const del=e.target.closest("[data-delete]");
+
  if(edit){
-  const p=packages.find(x=>x.id===edit.dataset.edit) ||
-   (await db.from("gb_packages").select("*").eq("id",edit.dataset.edit).single()).data;
+  let p=packages.find(x=>String(x.id)===edit.dataset.edit);
+
+  if(!p){
+   const result=await db.from("gb_packages").select("*")
+    .eq("id",edit.dataset.edit).single();
+   p=result.data;
+  }
+
   if(!p)return;
+
   $("editId").value=p.id;
   $("pName").value=p.package_name;
   $("pGB").value=p.gb_amount;
@@ -362,15 +670,21 @@ $("adminPackages").addEventListener("click",async e=>{
   $("pValidity").value=p.validity_months;
   $("pSort").value=p.sort_order;
   $("pActive").value=String(p.is_active);
+
   $("formTitle").textContent="Badilisha kifurushi";
   $("cancelEdit").classList.remove("hidden");
   $("formTitle").scrollIntoView({behavior:"smooth"});
  }
+
  if(del){
   if(!confirm("Una uhakika unataka kufuta kifurushi hiki?"))return;
-  const {error}=await db.from("gb_packages").delete().eq("id",del.dataset.delete);
+
+  const {error}=await db.from("gb_packages").delete()
+   .eq("id",del.dataset.delete);
+
   if(error){alert(error.message);return;}
-  alert("Kifurushi kimefutwa. Historia ya oda imehifadhiwa.");
+
+  alert("Kifurushi kimefutwa.");
   await loadAdminPackages();
   await loadPackages();
  }
@@ -387,34 +701,50 @@ function resetForm(){
  $("formTitle").textContent="Ongeza kifurushi";
  $("cancelEdit").classList.add("hidden");
 }
+
 $("cancelEdit").onclick=resetForm;
 
 $("savePackage").onclick=async()=>{
  if(!isAdmin)return;
+
  const name=$("pName").value.trim();
  const gb=Number($("pGB").value);
  const price=Number($("pPrice").value);
  const validity=Number($("pValidity").value);
  const sort=Number($("pSort").value);
+
  if(!name||!Number.isInteger(gb)||gb<1||
  !Number.isInteger(price)||price<100||
- !Number.isInteger(validity)||validity<1){
-  msg("packageMsg","Jaza taarifa sahihi. Bei iwe angalau TSh 100.",true);return;
+ !Number.isInteger(validity)||validity<1||
+ !Number.isFinite(sort)){
+  msg("packageMsg","Jaza taarifa sahihi. Bei iwe angalau TSh 100.",true);
+  return;
  }
+
  const record={
-  package_name:name,gb_amount:gb,price_tzs:price,
-  validity_months:validity,sort_order:sort,
+  package_name:name,
+  gb_amount:gb,
+  price_tzs:price,
+  validity_months:validity,
+  sort_order:sort,
   is_active:$("pActive").value==="true"
  };
+
  const id=$("editId").value;
  let result;
+
  if(id){
   result=await db.from("gb_packages").update(record).eq("id",id);
  }else{
   record.code="GB-"+Date.now();
   result=await db.from("gb_packages").insert(record);
  }
- if(result.error){msg("packageMsg",result.error.message,true);return;}
+
+ if(result.error){
+  msg("packageMsg",result.error.message,true);
+  return;
+ }
+
  msg("packageMsg","Kifurushi kimehifadhiwa.");
  resetForm();
  await loadAdminPackages();
@@ -423,50 +753,78 @@ $("savePackage").onclick=async()=>{
 
 async function loadAdminOrders(){
  if(!isAdmin)return;
+
  const {data,error}=await db.from("gb_orders").select("*")
   .order("created_at",{ascending:false}).limit(200);
- if(error){$("adminOrders").textContent=error.message;return;}
+
+ if(error){
+  $("adminOrders").textContent=error.message;
+  return;
+ }
+
  $("adminOrders").innerHTML=(data||[]).map(o=>`
   <div class="order">
    <b>${esc(o.order_number)}</b>
-   <p>${esc(o.package_name)} · ${o.gb_amount} GB</p>
+   <p>${esc(o.package_name)} · ${esc(o.gb_amount)} GB</p>
    <p>Bei: TSh ${money(o.price_tzs)}</p>
    <p>Mpokeaji: ${esc(o.recipient_phone)}</p>
    <p>Reference: ${esc(o.transaction_reference||"Haijawekwa")}</p>
+
    <label>Hali ya oda</label>
-   <select id="status-${o.id}">
+   <select id="status-${esc(o.id)}">
     ${["pending_payment","payment_submitted","verified","delivered","rejected"].map(s=>
-    `<option value="${s}" ${o.status===s?"selected":""}>${s}</option>`).join("")}
+     `<option value="${s}" ${o.status===s?"selected":""}>${s}</option>`
+    ).join("")}
    </select>
+
    <label>Maelezo ya Admin</label>
-   <input id="note-${o.id}" value="${esc(o.admin_note||"")}">
-   <button data-save-order="${o.id}">Hifadhi mabadiliko</button>
-   <button data-wa="${o.id}" class="secondary">WhatsApp</button>
+   <input id="note-${esc(o.id)}" value="${esc(o.admin_note||"")}">
+
+   <button data-save-order="${esc(o.id)}">Hifadhi mabadiliko</button>
+   <button data-wa="${esc(o.id)}" class="secondary">WhatsApp</button>
   </div>`).join("")||"Hakuna oda.";
 }
 
 $("adminOrders").addEventListener("click",async e=>{
  const save=e.target.closest("[data-save-order]");
  const wa=e.target.closest("[data-wa]");
+
  if(save){
   const id=save.dataset.saveOrder;
   const status=$("status-"+id).value;
+
   const update={
-   status,admin_note:$("note-"+id).value.trim(),
+   status,
+   admin_note:$("note-"+id).value.trim(),
    updated_at:new Date().toISOString()
   };
-  if(status==="delivered")update.delivered_at=new Date().toISOString();
+
+  if(status==="delivered"){
+   update.delivered_at=new Date().toISOString();
+  }
+
   const {error}=await db.from("gb_orders").update(update).eq("id",id);
+
   if(error){alert(error.message);return;}
+
   alert("Oda imesasishwa.");
   await loadAdminOrders();
  }
+
  if(wa){
   const id=wa.dataset.wa;
-  const {data:o}=await db.from("gb_orders").select("*").eq("id",id).single();
+  const {data:o}=await db.from("gb_orders").select("*")
+   .eq("id",id).single();
+
   if(!o)return;
-  const text=`GBPESA GB SHOP\nOda: ${o.order_number}\nKifurushi: ${o.package_name}\nGB: ${o.gb_amount}\nMpokeaji: ${o.recipient_phone}\nHali: ${o.status}`;
-  window.open("https://wa.me/255702715377?text="+encodeURIComponent(text),"_blank");
+
+  const text=
+   `GBPESA GB SHOP\nOda: ${o.order_number}\nKifurushi: ${o.package_name}\nGB: ${o.gb_amount}\nMpokeaji: ${o.recipient_phone}\nHali: ${o.status}`;
+
+  window.open(
+   "https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(text),
+   "_blank"
+  );
  }
 });
 
@@ -475,9 +833,15 @@ $("refreshOrders").onclick=loadAdminOrders;
 
 $("login").onclick=async()=>{
  const {error}=await db.auth.signInWithPassword({
-  email:$("email").value.trim(),password:$("password").value
+  email:$("email").value.trim(),
+  password:$("password").value
  });
- if(error){msg("authMsg",error.message,true);return;}
+
+ if(error){
+  msg("authMsg",error.message,true);
+  return;
+ }
+
  await checkUser();
  await loadPackages();
  page("shop");
@@ -488,22 +852,38 @@ $("register").onclick=async()=>{
  const phone=$("phone").value.trim();
  const email=$("newEmail").value.trim();
  const password=$("newPassword").value;
+
  if(!name||!email||password.length<6){
-  msg("authMsg","Jaza jina, email na password sahihi.",true);return;
+  msg("authMsg","Jaza jina, email na password sahihi.",true);
+  return;
  }
+
  if(phone&&!/^(0[67][0-9]{8}|255[67][0-9]{8})$/.test(phone)){
-  msg("authMsg","Namba ya simu si sahihi.",true);return;
+  msg("authMsg","Namba ya simu si sahihi.",true);
+  return;
  }
+
  const {data,error}=await db.auth.signUp({
-  email,password,
+  email,
+  password,
   options:{data:{full_name:name,phone}}
  });
- if(error){msg("authMsg",error.message,true);return;}
+
+ if(error){
+  msg("authMsg",error.message,true);
+  return;
+ }
+
  if(data.user && data.session){
   const {error:pe}=await db.from("profiles").upsert({
-   id:data.user.id,full_name:name,phone,role:"user"
+   id:data.user.id,
+   full_name:name,
+   phone,
+   role:"user"
   },{onConflict:"id"});
+
   if(pe)console.error("Profile:",pe.message);
+
   await checkUser();
   page("shop");
   msg("authMsg","Akaunti imefunguliwa.");
@@ -519,14 +899,17 @@ $("logout").onclick=async()=>{
 };
 
 db.auth.onAuthStateChange(()=>{
- setTimeout(async()=>{await checkUser();},300);
+ setTimeout(async()=>{
+  await checkUser();
+ },300);
 });
 
 async function start(){
  await checkUser();
  await loadPackages();
 }
+
 start();
 </script>
 </body>
-</html>
+ </html>
