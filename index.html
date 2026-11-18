@@ -229,19 +229,64 @@ $("packages").addEventListener("click",e=>{
  $("buyPanel").scrollIntoView({behavior:"smooth"});
 });
 
+
 $("createOrder").onclick=async()=>{
  if(!user||!chosen)return;
+
  const phone=$("recipient").value.trim();
+
  if(!/^(0[67][0-9]{8}|255[67][0-9]{8})$/.test(phone)){
-  msg("buyMsg","Namba ya simu si sahihi.",true);return;
+  msg("buyMsg","Namba ya simu si sahihi.",true);
+  return;
  }
+
+ // Fungua dirisha mapema ili browser isizuie WhatsApp
+ const waWindow=window.open("about:blank","_blank");
+
  $("createOrder").disabled=true;
+
  const {data,error}=await db.rpc("gb_create_order",{
-  p_package_id:chosen.id,p_recipient_phone:phone
+  p_package_id:chosen.id,
+  p_recipient_phone:phone
  });
+
  $("createOrder").disabled=false;
- if(error){msg("buyMsg",error.message,true);return;}
+
+ if(error){
+  if(waWindow)waWindow.close();
+  msg("buyMsg",error.message,true);
+  return;
+ }
+
+ const messageText=
+`HABARI GBPESA GB SHOP
+
+NINA ODA MPYA YA GB
+
+Namba ya Oda: ${data.order_number}
+Kifurushi: ${data.package_name}
+Kiasi cha GB: ${data.gb_amount} GB
+Bei: TSh ${Number(data.price_tzs).toLocaleString()}
+Muda: Miezi ${data.validity_months}
+Namba ya mpokeaji: ${data.recipient_phone}
+
+Tafadhali nisaidie kukamilisha oda yangu.
+Asante.`;
+
+ const whatsappNumber="255702715377";
+
+ const whatsappLink=
+ "https://wa.me/"+whatsappNumber+
+ "?text="+encodeURIComponent(messageText);
+
+ if(waWindow){
+  waWindow.location.href=whatsappLink;
+ }else{
+  window.location.href=whatsappLink;
+ }
+
  msg("buyMsg","Oda imetengenezwa: "+data.order_number);
+
  await loadMyOrders();
 };
 
