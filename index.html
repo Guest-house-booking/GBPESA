@@ -275,9 +275,12 @@ Asante.`;
 
  const whatsappNumber="255702715377";
 
- const whatsappLink=
- "https://wa.me/"+whatsappNumber+
- "?text="+encodeURIComponent(messageText);
+ const encodedMessage=encodeURIComponent(messageText);
+
+const whatsappLink=
+ "intent://send?phone="+whatsappNumber+
+ "&text="+encodedMessage+
+ "#Intent;scheme=whatsapp;package=com.whatsapp.w4b;end";
 
  if(waWindow){
   waWindow.location.href=whatsappLink;
