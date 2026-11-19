@@ -558,15 +558,16 @@ async function loadMyOrders(){
   return `<div class="order">
    <b>${esc(o.order_number)}</b>
    <p>${esc(o.package_name)} · ${esc(o.gb_amount)} GB</p>
-   <p>TSh ${money(o.price_tzs)} · ${esc(o.recipient_phone)}</p>
+   <p>TSh ${money(o.price_tzs)}</p>
+<p>Namba ya kulipia: ${esc(o.payer_phone||"Haipo")}</p>
+<p>Namba ya kuungiwa GB: ${esc(o.recipient_phone)}</p>
    <p>Hali ya oda: <b>${esc(statusText)}</b></p>
    ${o.fimipay_payment_status?`<p>FimiPay: ${esc(o.fimipay_payment_status)}</p>`:""}
    ${o.fimipay_transid?`<p>Muamala: ${esc(o.fimipay_transid)}</p>`:""}
    ${o.fimipay_receipt?`<p>Risiti: ${esc(o.fimipay_receipt)}</p>`:""}
    ${o.admin_note?`<p>Maelezo: ${esc(o.admin_note)}</p>`:""}
-   ${o.status==="verified"?`<div class="msg">Malipo yamethibitishwa. Oda yako inasubiri uwasilishaji wa GB.</div>`:""}
-   ${o.status==="delivered"?`<div class="msg">Oda yako imewasilishwa.</div>`:""}
-  </div>`;
+   ${["verified","delivered"].includes(o.status)?
+ `<div class="msg"><b>✓ PAID</b><br>Malipo yamethibitishwa na FimiPay.</div>`:""}
  }).join(""):"Bado huna oda.";
 }
 
