@@ -494,9 +494,11 @@ $("createOrder").onclick=async()=>{
    throw new Error(details);
   }
 
-  if(!data||data.error)throw new Error(
-   data?.error||"Mfumo haujajibu."
+  if (!data || data.success === false || data.error) {
+  throw new Error(
+    data?.message || data?.error || "Mfumo haujajibu."
   );
+ } 
 
   const orderNumber=data.order_number;
   const orderId=data.order_id;
@@ -540,93 +542,98 @@ $("createOrder").onclick=async()=>{
 
 
 async function loadMyOrders() {
-  const container = document.getElementById("myOrders");
+  const container = $("myOrders");
 
   if (!container) return;
 
-  if (!currentUser) {
+  if (!user) {
     container.innerHTML = `
-      <div class="empty-state">
-        Tafadhali ingia kwenye akaunti yako kuona oda zako.
+      <div class="msg err">
+        Tafadhali ingia kwanza ili kuona oda zako.
       </div>
     `;
     return;
   }
 
   container.innerHTML = `
-    <div class="loading">Inapakia oda zako...</div>
+    <div class="msg">Inapakia oda zako...</div>
   `;
 
   try {
     const { data: orders, error } = await db
       .from("gb_orders")
       .select("*")
-      .eq("user_id", currentUser.id)
+      .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
     if (error) throw error;
 
     if (!orders || orders.length === 0) {
       container.innerHTML = `
-        <div class="empty-state">
+        <div class="msg">
           Bado huna oda yoyote.
         </div>
       `;
       return;
     }
 
+    const statusNames = {
+      pending_payment: "Inasubiri malipo",
+      payment_submitted: "Malipo yamewasilishwa",
+      verified: "Malipo yamethibitishwa",
+      delivered: "GB zimewasilishwa",
+      rejected: "Oda imekataliwa"
+    };
+
     container.innerHTML = orders.map(o => {
-      const status = o.status || "pending_payment";
+      const status = String(o.status || "pending_payment").toLowerCase();
+      const payment = String(o.fimipay_payment_status || "").toUpperCase();
 
-      const statusNames = {
-        pending_payment: "Inasubiri malipo",
-        payment_submitted: "Malipo yamewasilishwa",
-        verified: "Malipo yamethibitishwa",
-        delivered: "GB zimewasilishwa",
-        rejected: "Oda imekataliwa"
-      };
+      const paid =
+        ["verified", "delivered"].includes(status) ||
+        ["COMPLETED", "SUCCESS"].includes(payment);
 
-      const statusName = statusNames[status] || status;
-      const amount = Number(o.price_tzs || 0).toLocaleString("en-US");
+      const statusText = paid
+        ? (status === "delivered"
+            ? "GB zimewasilishwa"
+            : "PESA TAYARI IMELIPWA")
+        : (statusNames[status] || status);
+
       const date = o.created_at
         ? new Date(o.created_at).toLocaleString("sw-TZ")
         : "-";
 
       return `
-        <div class="order-card">
-          <div class="order-header">
-            <strong>${escapeHTML(o.order_number || "Oda")}</strong>
-            <span class="order-status">${escapeHTML(statusName)}</span>
+        <div class="order">
+          <div class="row">
+            <b>Oda: ${esc(o.order_number || "-")}</b>
+            <span class="pill">${esc(statusText)}</span>
           </div>
 
-          <p><strong>Kiasi:</strong> TSh ${amount}</p>
-          <p><strong>Namba ya kulipia:</strong>
-            ${escapeHTML(o.payer_phone || "-")}
-          </p>
-          <p><strong>Namba ya kuungiwa GB:</strong>
-            ${escapeHTML(o.recipient_phone || "-")}
-          </p>
-          <p><strong>Hali ya malipo:</strong>
-            ${escapeHTML(o.fimipay_payment_status || "-")}
-          </p>
-          <p><strong>Tarehe:</strong> ${escapeHTML(date)}</p>
+          <p><b>Kifurushi:</b> ${esc(o.package_name || "-")}</p>
+          <p><b>GB:</b> ${esc(o.gb_amount || "-")}</p>
+          <p><b>Kiasi:</b> TSh ${money(o.price_tzs)}</p>
+          <p><b>Namba ya kulipia:</b> ${esc(o.payer_phone || "-")}</p>
+          <p><b>Namba ya kuungiwa GB:</b> ${esc(o.recipient_phone || "-")}</p>
+          <p><b>Hali ya malipo:</b> ${esc(o.fimipay_payment_status || "PENDING")}</p>
+          <p><b>Tarehe:</b> ${esc(date)}</p>
         </div>
       `;
     }).join("");
 
   } catch (error) {
-    console.error("loadMyOrders error:", error);
+    console.error("loadMyOrders:", error);
 
     container.innerHTML = `
-      <div class="error">
-        Imeshindikana kupakia oda zako.
-        Tafadhali jaribu tena.
+      <div class="msg err">
+        Imeshindikana kupakia oda zako:
+        ${esc(error.message)}
       </div>
     `;
   }
 }
- 
-async function loadAdminPackages(){
+
+ async function loadAdminPackages(){
  const {data,error}=await db.from("gb_packages").select("*").order("sort_order");
  if(error){$("adminPackages").textContent=error.message;return;}
 
@@ -814,6 +821,14 @@ $("logout").onclick=async()=>{
 db.auth.onAuthStateChange(()=>{
  setTimeout(async()=>{await checkUser();},300);
 });
+ async function loadAdmin() {
+  if (!isAdmin) return;
+
+  await Promise.all([
+    loadAdminPackages(),
+    loadAdminOrders()
+  ]);
+  }
 
 async function start(){
  await checkUser();
