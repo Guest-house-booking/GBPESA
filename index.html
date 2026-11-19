@@ -538,47 +538,94 @@ $("createOrder").onclick=async()=>{
  }
 };
 
-async function loadMyOrders(){
- if(!user){$("myOrders").textContent="Ingia kwanza.";return;}
- $("myOrders").textContent="Inapakia...";
- const {data,error}=await db.from("gb_orders").select("*")
-  .eq("user_id",user.id).order("created_at",{ascending:false});
 
- if(error){$("myOrders").textContent=error.message;return;}
+async function loadMyOrders() {
+  const container = document.getElementById("myOrders");
 
- $("myOrders").innerHTML=(data||[]).length?data.map(o=>{
-  let statusText={
-   pending_payment:"Inasubiri malipo",
-   payment_submitted:"Malipo yamewasilishwa",
-   verified:"Malipo yamethibitishwa",
-   delivered:"GB imewasilishwa",
-   rejected:"Oda imekataliwa"
-  }[o.status]||o.status;
+  if (!container) return;
 
-  return `<div class="order">
-   <b>${esc(o.order_number)}</b>
-   <p>${esc(o.package_name)} · ${esc(o.gb_amount)} GB</p>
-   <p>TSh ${money(o.price_tzs)}</p>
-<p>Namba ya kulipia: ${esc(o.payer_phone||"Haipo")}</p>
-<p>Namba ya kuungiwa GB: ${esc(o.recipient_phone)}</p>
-   <p>Hali ya oda: <b>${esc(statusText)}</b></p>
-   ${o.fimipay_payment_status?`<p>FimiPay: ${esc(o.fimipay_payment_status)}</p>`:""}
-   ${o.fimipay_transid?`<p>Muamala: ${esc(o.fimipay_transid)}</p>`:""}
-   ${o.fimipay_receipt?`<p>Risiti: ${esc(o.fimipay_receipt)}</p>`:""}
-   ${o.admin_note?`<p>Maelezo: ${esc(o.admin_note)}</p>`:""}
-   ${["verified","delivered"].includes(o.status)?
- `<div class="msg"><b>✓ PAID</b><br>Malipo yamethibitishwa na FimiPay.</div>`:""}
- }).join(""):"Bado huna oda.";
+  if (!currentUser) {
+    container.innerHTML = `
+      <div class="empty-state">
+        Tafadhali ingia kwenye akaunti yako kuona oda zako.
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="loading">Inapakia oda zako...</div>
+  `;
+
+  try {
+    const { data: orders, error } = await db
+      .from("gb_orders")
+      .select("*")
+      .eq("user_id", currentUser.id)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    if (!orders || orders.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          Bado huna oda yoyote.
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = orders.map(o => {
+      const status = o.status || "pending_payment";
+
+      const statusNames = {
+        pending_payment: "Inasubiri malipo",
+        payment_submitted: "Malipo yamewasilishwa",
+        verified: "Malipo yamethibitishwa",
+        delivered: "GB zimewasilishwa",
+        rejected: "Oda imekataliwa"
+      };
+
+      const statusName = statusNames[status] || status;
+      const amount = Number(o.price_tzs || 0).toLocaleString("en-US");
+      const date = o.created_at
+        ? new Date(o.created_at).toLocaleString("sw-TZ")
+        : "-";
+
+      return `
+        <div class="order-card">
+          <div class="order-header">
+            <strong>${escapeHTML(o.order_number || "Oda")}</strong>
+            <span class="order-status">${escapeHTML(statusName)}</span>
+          </div>
+
+          <p><strong>Kiasi:</strong> TSh ${amount}</p>
+          <p><strong>Namba ya kulipia:</strong>
+            ${escapeHTML(o.payer_phone || "-")}
+          </p>
+          <p><strong>Namba ya kuungiwa GB:</strong>
+            ${escapeHTML(o.recipient_phone || "-")}
+          </p>
+          <p><strong>Hali ya malipo:</strong>
+            ${escapeHTML(o.fimipay_payment_status || "-")}
+          </p>
+          <p><strong>Tarehe:</strong> ${escapeHTML(date)}</p>
+        </div>
+      `;
+    }).join("");
+
+  } catch (error) {
+    console.error("loadMyOrders error:", error);
+
+    container.innerHTML = `
+      <div class="error">
+        Imeshindikana kupakia oda zako.
+        Tafadhali jaribu tena.
+      </div>
+    `;
+  }
 }
-
-$("refreshMyOrders").onclick=loadMyOrders;
-
-async function loadAdmin(){
- if(!isAdmin)return;
- await loadAdminPackages();
- await loadAdminOrders();
-}
-
+ 
 async function loadAdminPackages(){
  const {data,error}=await db.from("gb_packages").select("*").order("sort_order");
  if(error){$("adminPackages").textContent=error.message;return;}
