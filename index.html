@@ -304,12 +304,10 @@ async function watchPayment(orderId,orderNumber){
   const status=String(o.status||"").toLowerCase();
   const payStatus=String(o.fimipay_payment_status||"").toUpperCase();
 
-  if(
-   status==="verified" ||
-   status==="delivered" ||
-   payStatus==="COMPLETED" ||
-   payStatus==="SUCCESS"
-  ){
+  if (
+  payStatus === "COMPLETED" ||
+  payStatus === "SUCCESS"
+) {
    $("buyMsg").innerHTML=`
     <div class="msg">
      <h3>✓ MALIPO YAMEFANIKIWA</h3>
