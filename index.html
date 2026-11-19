@@ -107,12 +107,17 @@ footer a{color:#ffe5a0}
  <div class="panel hidden" id="buyPanel">
   <h2>Nunua kifurushi</h2>
   <div id="chosen" class="selected-package"></div>
-  <label>Namba ya simu ya TIGO kupokea GB</label>
-  <input id="recipient" inputmode="tel" maxlength="12" placeholder="07XXXXXXXX">
+  <label>Namba ya kulipia (FimiPay)</label>
+<input id="paymentPhone" inputmode="tel" maxlength="12"
+placeholder="07XXXXXXXX">
+
+<label>Namba ya kuungiwa GB (TIGO)</label>
+<input id="recipient" inputmode="tel" maxlength="12"
+placeholder="07XXXXXXXX">
   <div class="pay-info">
-   <b><span>Malipo salama kupitia FimiPay</span></b>
-   <p>Baada ya kubonyeza LIPIA SASA, ombi la malipo litatumwa kwenye simu uliyoingiza. Fuata maelekezo ya simu yako kukamilisha malipo.</p>
-   <p class="small">Hakikisha unaweka namba sahihi na una fedha za kutosha kabla ya kuendelea.</p>
+ <p>Ombi la malipo litatumwa kwenye namba ya kulipia uliyoingiza.</p>
+ <p>Baada ya malipo kuthibitishwa, GB zitaungiwa kwenye namba ya kupokea GB.</p>
+ <p class="small">Hakikisha namba zote mbili ni sahihi kabla ya kulipa.</p>
   </div>
   <button id="createOrder" style="width:100%;margin-top:12px">LIPIA SASA</button>
   <div id="buyMsg"></div>
@@ -272,7 +277,90 @@ let user=null,isAdmin=false,packages=[],chosen=null;
 
 const $=id=>document.getElementById(id);
 const money=n=>Number(n||0).toLocaleString("en-US");
+let paymentWatchTimer=null;
 
+async function watchPayment(orderId,orderNumber){
+ if(paymentWatchTimer)clearTimeout(paymentWatchTimer);
+
+ let attempts=0;
+
+ async function check(){
+  attempts++;
+
+  const {data:o,error}=await db
+   .from("gb_orders")
+   .select("status,fimipay_payment_status,recipient_phone,payer_phone")
+   .eq("id",orderId)
+   .eq("user_id",user.id)
+   .maybeSingle();
+
+  if(error){
+   paymentWatchTimer=setTimeout(check,5000);
+   return;
+  }
+
+  if(!o)return;
+
+  const status=String(o.status||"").toLowerCase();
+  const payStatus=String(o.fimipay_payment_status||"").toUpperCase();
+
+  if(
+   status==="verified" ||
+   status==="delivered" ||
+   payStatus==="COMPLETED" ||
+   payStatus==="SUCCESS"
+  ){
+   $("buyMsg").innerHTML=`
+    <div class="msg">
+     <h3>✓ MALIPO YAMEFANIKIWA</h3>
+     <h2 style="color:#087f5b">PAID</h2>
+     <p>Oda: <b>${esc(orderNumber)}</b></p>
+     <p>Namba ya kulipia: ${esc(o.payer_phone||"")}</p>
+     <p>Namba ya kuungiwa GB: ${esc(o.recipient_phone)}</p>
+     <p>Malipo yamethibitishwa na FimiPay.</p>
+     <p>Oda yako inasubiri au imekamilisha uwasilishaji wa GB.</p>
+    </div>`;
+   await loadMyOrders();
+   return;
+  }
+
+  if(
+   payStatus==="FAILED" ||
+   payStatus==="CANCELLED" ||
+   status==="rejected"
+  ){
+   $("buyMsg").innerHTML=`
+    <div class="msg err">
+     Malipo hayajakamilika.
+     <p>Oda: ${esc(orderNumber)}</p>
+     <p>Hali: ${esc(payStatus||status)}</p>
+     Tafadhali wasiliana na huduma kwa wateja.
+    </div>`;
+   await loadMyOrders();
+   return;
+  }
+
+  $("buyMsg").innerHTML=`
+   <div class="msg">
+    <b>ODA IMETENGENEZWA</b>
+    <h3>INASUBIRI MALIPO...</h3>
+    <p>Oda: ${esc(orderNumber)}</p>
+    <p>FimiPay: ${esc(payStatus||"PENDING")}</p>
+    <p>Tafadhali kamilisha malipo kwenye simu yako.</p>
+    <p>Tutathibitisha malipo moja kwa moja.</p>
+   </div>`;
+
+  if(attempts<200){
+   paymentWatchTimer=setTimeout(check,3000);
+  }else{
+   $("buyMsg").innerHTML+=`
+    <p class="small">Ufuatiliaji wa moja kwa moja umesimama.
+    Fungua Oda zangu kuangalia hali ya malipo.</p>`;
+  }
+ }
+
+ await check();
+ }
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({
  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
 }[c]));
@@ -359,13 +447,23 @@ $("packages").addEventListener("click",e=>{
 });
 
 /* FIMIPAY: omba malipo kupitia Edge Function yenye API key salama */
+
 $("createOrder").onclick=async()=>{
  if(!user){page("account");return;}
  if(!chosen){msg("buyMsg","Chagua kifurushi kwanza.",true);return;}
 
- const phone=$("recipient").value.trim();
- if(!/^(0[67][0-9]{8}|255[67][0-9]{8})$/.test(phone)){
-  msg("buyMsg","Namba ya simu si sahihi. Tumia 07XXXXXXXX au 2557XXXXXXXX.",true);
+ const paymentPhone=$("paymentPhone").value.trim();
+ const recipientPhone=$("recipient").value.trim();
+
+ const validPhone=/^(0[67][0-9]{8}|255[67][0-9]{8})$/;
+
+ if(!validPhone.test(paymentPhone)){
+  msg("buyMsg","Namba ya kulipia si sahihi.",true);
+  return;
+ }
+
+ if(!validPhone.test(recipientPhone)){
+  msg("buyMsg","Namba ya kuungiwa GB si sahihi.",true);
   return;
  }
 
@@ -374,15 +472,19 @@ $("createOrder").onclick=async()=>{
  btn.textContent="INAANZISHA MALIPO...";
 
  try{
-  const {data,error}=await db.functions.invoke("fimipay-create-order",{
-   body:{
-    package_id:chosen.id,
-    recipient_phone:phone
+  const {data,error}=await db.functions.invoke(
+   "fimipay-create-order",
+   {
+    body:{
+     package_id:chosen.id,
+     payment_phone:paymentPhone,
+     recipient_phone:recipientPhone
+    }
    }
-  });
+  );
 
   if(error){
-   let details=error.message||"Hitilafu ya kuanzisha malipo.";
+   let details=error.message;
    try{
     if(error.context){
      const body=await error.context.json();
@@ -392,30 +494,44 @@ $("createOrder").onclick=async()=>{
    throw new Error(details);
   }
 
-  if(!data)throw new Error("Hakuna majibu kutoka kwenye mfumo wa malipo.");
-  if(data.error)throw new Error(data.error);
+  if(!data||data.error)throw new Error(
+   data?.error||"Mfumo haujajibu."
+  );
 
-  const orderNumber=data.order_number||data.order?.order_number||"Oda imetengenezwa";
-  const fimipayStatus=data.payment_status||data.fimipay_payment_status||"PENDING";
+  const orderNumber=data.order_number;
+  const orderId=data.order_id;
+
+  if(!orderId||!orderNumber){
+   throw new Error("Taarifa za oda hazijakamilika.");
+  }
 
   if(data.simulated===true){
    msg("buyMsg",
-    "Oda "+orderNumber+" imetengenezwa, lakini FimiPay imerudisha TEST/SIMULATED. Hii si malipo halisi. Hakikisha unatumia API key ya LIVE.");
-  }else{
-   $("buyMsg").innerHTML=`
-    <div class="msg">
-     <b>Ombi la malipo limetumwa!</b>
-     <p>Namba ya oda: <b>${esc(orderNumber)}</b></p>
-     <p>Hali ya malipo: <b>${esc(fimipayStatus)}</b></p>
-     <p>Angalia simu ya namba ${esc(phone)} na fuata maelekezo ya malipo yanayoonekana.</p>
-     <p>Baada ya kulipa, mfumo utapokea uthibitisho kutoka FimiPay. Unaweza kubonyeza Refresh kwenye Oda zangu kuona hali mpya.</p>
-    </div>`;
+    "FimiPay imerudisha TEST/SIMULATED. Haya si malipo halisi. Hakikisha API key ni LIVE.",
+    true
+   );
+   return;
   }
+
+  $("buyMsg").innerHTML=`
+   <div class="msg">
+    <b>OMBI LA MALIPO LIMETUMWA</b>
+    <p>Oda: ${esc(orderNumber)}</p>
+    <p>Namba ya kulipia: ${esc(paymentPhone)}</p>
+    <p>Namba ya kuungiwa GB: ${esc(recipientPhone)}</p>
+    <p>Hali: PENDING</p>
+    <p>Subiri uthibitisho wa FimiPay...</p>
+   </div>`;
 
   await loadMyOrders();
 
+  watchPayment(orderId,orderNumber);
+
  }catch(error){
-  msg("buyMsg",error.message||"Imeshindikana kuanzisha malipo. Jaribu tena.",true);
+  msg("buyMsg",
+   error.message||"Imeshindikana kuanzisha malipo.",
+   true
+  );
  }finally{
   btn.disabled=false;
   btn.textContent="LIPIA SASA";
