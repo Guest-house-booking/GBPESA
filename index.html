@@ -3,73 +3,231 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#087f5b">
-<meta name="description" content="GBPESA GB SHOP - Nunua vifurushi vya GB kwa urahisi Tanzania. Huduma za vifurushi vya intaneti na usaidizi kwa wateja.">
+<meta name="theme-color" content="#07543e">
+<meta name="description" content="GBPESA GB SHOP - Nunua vifurushi vya GB Tanzania.">
 <title>GBPESA GB SHOP | Nunua GB Tanzania</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root{
- --g:#087f5b;--d:#07543e;--gold:#ffd166;
- --bg:#f3f7f5;--white:#fff;--text:#25342c;
- --muted:#718078;--border:#e0e9e3;
+ --g:#087f5b;
+ --d:#07543e;
+ --gold:#ffd166;
+ --bg:#f1f6f3;
+ --white:#fff;
+ --text:#20342a;
+ --muted:#718078;
+ --border:#e0e9e3;
+ --shadow:0 4px 15px rgba(0,50,30,.07);
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--text);line-height:1.6}
-header{background:linear-gradient(120deg,#07543e,#087f5b);color:white;padding:28px 17px}
+body{
+ margin:0;background:var(--bg);
+ font-family:Arial,Helvetica,sans-serif;
+ color:var(--text);line-height:1.5;
+}
+header{
+ background:linear-gradient(125deg,#063d2d,#087f5b);
+ color:white;padding:20px 14px;
+}
 .header-inner{max-width:1000px;margin:auto}
-.logo{font-size:28px;font-weight:900;letter-spacing:-1px}
-.logo span{color:var(--gold)}
-header p{margin:5px 0}
-nav{display:flex;gap:7px;overflow-x:auto;background:white;padding:10px;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px #0000000a}
-nav button{background:#e5f2eb;color:var(--d);white-space:nowrap;flex-shrink:0}
-nav button.active{background:var(--g);color:white}
-button{border:0;border-radius:9px;padding:12px 15px;background:var(--g);color:white;font-weight:bold;cursor:pointer}
+.brand{display:flex;align-items:center;gap:11px}
+.logo-icon{
+ width:49px;height:49px;flex-shrink:0;
+ background:linear-gradient(145deg,#ffe49a,#e5a92d);
+ border-radius:14px;display:flex;
+ align-items:center;justify-content:center;
+ box-shadow:0 4px 12px #0003;
+}
+.logo-icon svg{width:39px;height:39px}
+.brand-name{font-size:25px;font-weight:1000;letter-spacing:-1px}
+.brand-name span{color:var(--gold)}
+.tagline{font-size:12px;color:#e0f3e8;margin-top:2px}
+header .subtitle{font-size:12px;color:#d6ebdf;margin:10px 0 0}
+
+nav{
+ display:flex;gap:6px;overflow-x:auto;
+ background:white;padding:9px;
+ position:sticky;top:0;z-index:20;
+ box-shadow:0 2px 9px #0000000b;
+ scrollbar-width:none;
+}
+nav::-webkit-scrollbar{display:none}
+button{
+ border:0;border-radius:10px;padding:12px 15px;
+ background:var(--g);color:white;
+ font-weight:900;font-size:13px;
+ cursor:pointer;transition:.18s;
+ box-shadow:0 3px 7px #07543e20;
+}
+button:active{transform:scale(.97)}
 button:disabled{opacity:.5;cursor:not-allowed}
-main{max-width:950px;margin:auto;padding:14px}
-.panel{background:white;border-radius:14px;padding:18px;margin:13px 0;box-shadow:0 3px 12px #00000009}
-h2{color:var(--d);font-size:21px;margin-top:0}
-h3{color:var(--d)}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.package,.order{border:1px solid var(--border);border-radius:12px;padding:14px;margin:8px 0}
-.package{background:#fff}
-.price{font-size:23px;color:var(--g);font-weight:bold}
-input,select,textarea{width:100%;padding:13px;border:1px solid #d5dfd9;border-radius:8px;margin:6px 0 13px;font-size:15px;background:white}
-label{font-size:13px;font-weight:bold}
-.small{font-size:12px;color:var(--muted)}
+nav button{
+ background:#e9f4ed;color:var(--d);
+ white-space:nowrap;flex-shrink:0;
+ box-shadow:none;padding:10px 13px;
+}
+nav button.active{background:var(--g);color:white}
+main{max-width:950px;margin:auto;padding:12px}
+.panel{
+ background:white;border:1px solid #edf1ee;
+ border-radius:15px;padding:16px;margin:12px 0;
+ box-shadow:var(--shadow);
+}
+h2{font-size:19px;color:var(--d);margin:0 0 12px;font-weight:900}
+h3{color:var(--d);font-size:15px;margin:5px 0}
+p{margin:8px 0}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:9px;
+}
+.package{
+ position:relative;
+ min-width:0;
+ background:linear-gradient(160deg,#fff,#f7fbf8);
+ border:1px solid #dcebe1;
+ border-radius:12px;
+ padding:10px 9px;
+ text-align:center;
+ margin:0;
+ box-shadow:0 2px 7px #00000008;
+ transition:.2s;
+}
+.package:hover{
+ border-color:var(--g);
+ box-shadow:0 4px 12px #087f5b18;
+}
+.package .package-name{
+ font-size:14px;font-weight:1000;color:var(--d);
+ margin-bottom:3px;
+}
+.package .gb-number{
+ font-size:23px;font-weight:1000;
+ color:var(--g);line-height:1.2;
+}
+.package .price{
+ font-size:16px;font-weight:1000;
+ color:#bd8517;margin:5px 0;
+}
+.package .validity{
+ font-size:10px;color:var(--muted);
+ font-weight:bold;margin-bottom:8px;
+}
+.package button{
+ width:100%;padding:10px 5px;
+ font-size:12px;border-radius:8px;
+}
+input,select,textarea{
+ width:100%;padding:12px;
+ border:1px solid #d5dfd9;
+ border-radius:9px;margin:6px 0 13px;
+ font-size:15px;background:white;
+ outline:none;
+}
+input:focus,select:focus,textarea:focus{
+ border-color:var(--g);
+ box-shadow:0 0 0 3px #087f5b15;
+}
+label{font-size:12px;font-weight:900;color:#405349}
+.small{font-size:11px;color:var(--muted)}
 .hidden{display:none!important}
-.notice{padding:13px;background:#fff5d9;border-radius:9px;font-size:13px}
-.msg{padding:11px;border-radius:8px;margin-top:8px;background:#e5f5eb;color:#07543e}
+.notice{
+ padding:12px;background:#fff7df;
+ border:1px solid #f1dfaa;
+ border-radius:10px;font-size:13px;
+}
+.msg{padding:11px;border-radius:9px;margin-top:9px;background:#e5f5eb;color:#07543e;font-size:13px}
 .err{background:#ffe9e9;color:#a21b1b}
 .row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .danger{background:#b52b37}
 .secondary{background:#64746a}
-.hero{background:linear-gradient(130deg,#e2f5eb,#f9fff9);border:1px solid #cfe9d8}
-.hero h2{font-size:25px}
-.hero strong{color:var(--g)}
-.feature{padding:12px;background:#f4faf6;border-radius:10px;margin:8px 0}
-footer{background:#07543e;color:white;margin-top:30px;padding:27px 16px}
+.hero{
+ background:linear-gradient(130deg,#e0f5e9,#f8fff9);
+ border:1px solid #cce8d5;
+}
+.hero h2{font-size:23px}
+.hero strong{color:var(--g);font-size:13px}
+.hero-logo{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.hero-logo .logo-icon{width:43px;height:43px}
+.feature{
+ padding:11px;background:#f3faf5;
+ border:1px solid #e6f1e9;
+ border-radius:10px;margin:8px 0;font-size:13px;
+}
+.order{
+ border:1px solid var(--border);
+ border-radius:11px;padding:12px;margin:9px 0;
+ background:#fff;
+}
+.order b{color:var(--d)}
+footer{background:#07543e;color:white;margin-top:25px;padding:25px 15px}
 .footer-inner{max-width:950px;margin:auto}
-.footer-links{display:flex;flex-wrap:wrap;gap:15px;margin:15px 0}
-.footer-links button{background:transparent;padding:3px;color:white;text-decoration:underline}
+.footer-links{display:flex;flex-wrap:wrap;gap:10px;margin:15px 0}
+.footer-links button{
+ background:transparent;padding:3px;color:white;
+ text-decoration:underline;box-shadow:none;
+}
 footer a{color:#ffe5a0}
-.policy h3{margin-bottom:5px}
-.policy p,.policy li{font-size:14px}
-.contact-link{display:block;padding:12px;background:#f0f8f3;border-radius:9px;margin:8px 0;color:var(--d);text-decoration:none;font-weight:bold}
+.policy h3{margin:15px 0 4px}
+.policy p,.policy li{font-size:13px}
+.contact-link{
+ display:block;padding:12px;background:#f0f8f3;
+ border-radius:9px;margin:8px 0;color:var(--d);
+ text-decoration:none;font-weight:bold;font-size:13px;
+}
+.section-label{
+ display:flex;align-items:center;justify-content:space-between;
+ gap:8px;margin-bottom:10px;
+}
+.section-label h2{margin:0}
+.pill{
+ background:#e7f5eb;color:var(--d);
+ border-radius:20px;padding:4px 9px;
+ font-size:10px;font-weight:900;
+}
+.selected-package{
+ border:1px solid #b9ddc5;
+ background:#f0faf3;padding:13px;
+ border-radius:11px;margin-bottom:13px;
+}
+.pay-info{
+ border:1px dashed #d9b65f;
+ background:#fff9e9;padding:12px;
+ border-radius:10px;font-size:12px;
+}
 @media(max-width:480px){
- main{padding:8px}
- .panel{padding:13px}
- .grid{grid-template-columns:1fr}
- .logo{font-size:24px}
+ main{padding:7px}
+ .panel{padding:12px;margin:9px 0}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .package{padding:9px 7px}
+ .package .gb-number{font-size:21px}
+ .package .price{font-size:14px}
+ .package button{font-size:11px;padding:10px 3px}
+ .brand-name{font-size:22px}
+ .hero h2{font-size:20px}
 }
 </style>
 </head>
+
 <body>
 
 <header>
  <div class="header-inner">
-  <div class="logo">GBPESA <span>GB SHOP</span></div>
-  <p>Nunua GB kwa urahisi · Tanzania</p>
-  <p class="small" style="color:#e3f5e9">Huduma za vifurushi vya intaneti kwa wateja wetu.</p>
+  <div class="brand">
+   <div class="logo-icon">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+     <path d="M18 24H65C78 24 86 33 86 46C86 59 78 68 65 68H45V83H18V24Z" fill="#07543E"/>
+     <path d="M28 35H63C70 35 74 39 74 46C74 53 70 57 63 57H45V73H28V35Z" fill="#FFF1C2"/>
+     <path d="M52 12L40 43H57L45 88L73 48H56L69 12H52Z" fill="#D79A20"/>
+    </svg>
+   </div>
+   <div>
+    <div class="brand-name">GBPESA <span>GB SHOP</span></div>
+    <div class="tagline">NUNUA GB · KWA URAHISI · TANZANIA</div>
+   </div>
+  </div>
+  <p class="subtitle">Vifurushi vya intaneti kwa bei na muda unaoonyeshwa kwenye website.</p>
  </div>
 </header>
 
@@ -85,46 +243,69 @@ footer a{color:#ffe5a0}
 
 <main>
 
-<!-- SHOP -->
 <section id="shop" class="page">
  <div class="panel hero">
-  <h2>Karibu GBPESA GB SHOP</h2>
-  <p>Unahitaji GB? Chagua kifurushi kinachokufaa na uweke namba ya simu inayopokea GB.</p>
-  <strong>Huduma ya vifurushi vya intaneti Tanzania.</strong>
+  <div class="hero-logo">
+   <div class="logo-icon">
+    <svg viewBox="0 0 100 100" fill="none">
+     <path d="M18 24H65C78 24 86 33 86 46C86 59 78 68 65 68H45V83H18V24Z" fill="#07543E"/>
+     <path d="M28 35H63C70 35 74 39 74 46C74 53 70 57 63 57H45V73H28V35Z" fill="#FFF1C2"/>
+     <path d="M52 12L40 43H57L45 88L73 48H56L69 12H52Z" fill="#D79A20"/>
+    </svg>
+   </div>
+   <div>
+    <h2 style="margin:0">Karibu GBPESA</h2>
+    <span class="small">GB SHOP · Huduma ya ununuzi wa GB</span>
+   </div>
+  </div>
+  <p>Chagua kifurushi kinachokufaa, kisha fuata hatua za kuwasilisha oda yako.</p>
+  <strong>✓ Rahisi · ✓ Salama · ✓ Huduma kwa wateja</strong>
  </div>
 
  <div class="panel">
-  <h2>Vifurushi vinavyopatikana</h2>
+  <div class="section-label">
+   <h2>Vifurushi vya GB</h2>
+   <span class="pill">VILIVYOPO</span>
+  </div>
   <div id="packages" class="grid">Inapakia vifurushi...</div>
  </div>
 
  <div class="panel hidden" id="buyPanel">
-  <h2>Thibitisha oda yako</h2>
-  <div id="chosen"></div>
+  <h2>Nunua kifurushi</h2>
+  <div id="chosen" class="selected-package"></div>
+
   <label>Namba ya simu ya kupokea GB</label>
-  <input id="recipient" inputmode="tel" placeholder="07XXXXXXXX">
-  <button id="createOrder" style="width:100%">Tengeneza oda</button>
+  <input id="recipient" inputmode="tel" maxlength="12" placeholder="07XXXXXXXX">
+
+  <div class="pay-info">
+   <b>Malipo ya FimiPay</b>
+   <p>Huduma ya malipo ya moja kwa moja itawezeshwa baada ya kukamilika kwa idhini na muunganisho wa FimiPay.</p>
+   <span class="small">Usitume malipo kwa namba isiyothibitishwa na GBPESA.</span>
+  </div>
+
+  <button id="createOrder" style="width:100%;margin-top:12px">
+   Tengeneza oda
+  </button>
   <div id="buyMsg"></div>
  </div>
 
  <div class="panel">
-  <h2>Kwa nini GBPESA GB SHOP?</h2>
-  <div class="feature">✓ Kuchagua vifurushi kulingana na mahitaji yako.</div>
+  <h2>Kwa nini GBPESA?</h2>
+  <div class="feature">✓ Vifurushi mbalimbali vya GB.</div>
   <div class="feature">✓ Historia ya oda kupitia akaunti yako.</div>
   <div class="feature">✓ Usaidizi wa wateja kupitia WhatsApp.</div>
+  <div class="feature">✓ Bei na muda wa kifurushi huonekana kabla ya kuagiza.</div>
  </div>
 </section>
 
-<!-- ORDERS -->
 <section id="orders" class="page hidden">
  <div class="panel">
   <h2>Oda zangu</h2>
-  <p>Angalia historia na hali ya oda zako.</p>
+  <p class="small">Angalia historia na hali ya oda zako.</p>
   <div id="myOrders">Ingia kwanza.</div>
  </div>
 </section>
 
-<!-- ACCOUNT -->
 <section id="account" class="page hidden">
  <div class="panel" id="authPanel">
   <h2>Ingia kwenye akaunti</h2>
@@ -132,8 +313,10 @@ footer a{color:#ffe5a0}
   <input id="email" type="email" placeholder="Email yako">
   <label>Password</label>
   <input id="password" type="password" placeholder="Password">
-  <button id="login" style="width:100%">Ingia</button>
-  <hr>
+  <button id="login" style="width:100%">INGIA</button>
+
+  <hr style="border:0;border-top:1px solid var(--border);margin:20px 0">
+
   <h2>Fungua akaunti mpya</h2>
   <label>Jina kamili</label>
   <input id="fullName" placeholder="Jina lako">
@@ -143,7 +326,7 @@ footer a{color:#ffe5a0}
   <input id="newEmail" type="email" placeholder="Email">
   <label>Password</label>
   <input id="newPassword" type="password" placeholder="Angalau herufi 6">
-  <button id="register" style="width:100%">Jisajili</button>
+  <button id="register" style="width:100%">JISAJILI</button>
   <div id="authMsg"></div>
  </div>
 
@@ -151,16 +334,15 @@ footer a{color:#ffe5a0}
   <h2>Akaunti yangu</h2>
   <p id="userEmail"></p>
   <p id="userRole"></p>
-  <button id="logout">Toka kwenye akaunti</button>
+  <button id="logout" class="danger">Toka kwenye akaunti</button>
  </div>
 </section>
 
-<!-- ABOUT -->
 <section id="about" class="page hidden">
  <div class="panel">
   <h2>Kuhusu GBPESA GB SHOP</h2>
   <p>GBPESA GB SHOP ni biashara inayolenga kuwapatia wateja huduma za ununuzi wa vifurushi vya GB na intaneti kwa urahisi.</p>
-  <p>Tunajitahidi kutoa huduma yenye uwazi, maelezo sahihi ya vifurushi, na usaidizi kwa wateja wetu.</p>
+  <p>Tunajitahidi kutoa huduma yenye uwazi, maelezo sahihi ya vifurushi na usaidizi kwa wateja wetu.</p>
   <h3>Dira yetu</h3>
   <p>Kuboresha upatikanaji wa huduma za vifurushi vya intaneti kupitia mfumo rahisi wa kidijitali.</p>
   <h3>Huduma zetu</h3>
@@ -174,151 +356,104 @@ footer a{color:#ffe5a0}
  </div>
 </section>
 
-<!-- CONTACT -->
 <section id="contact" class="page hidden">
  <div class="panel">
   <h2>Wasiliana nasi</h2>
-  <p>Tunakaribisha maswali, maoni na maombi ya msaada kuhusu oda na huduma zetu.</p>
+  <p>Tunakaribisha maswali, maoni na maombi ya msaada.</p>
   <a class="contact-link" href="https://wa.me/255702715377" target="_blank">WhatsApp: +255 702 715 377</a>
   <a class="contact-link" href="mailto:paulzakaria45@gmail.com">Email: paulzakaria45@gmail.com</a>
-  <div class="feature">
-   <b>Anuani ya posta</b><br>
-   P. O. Box 83, Kaliua, Tanzania
-  </div>
-  <p class="small">Kwa masuala ya oda, tafadhali taja namba ya oda yako unapowasiliana nasi.</p>
+  <div class="feature"><b>Anuani ya posta</b><br>P. O. Box 83, Kaliua, Tanzania</div>
+  <p class="small">Kwa masuala ya oda, taja namba ya oda unapowasiliana nasi.</p>
  </div>
 </section>
 
-<!-- REFUND -->
 <section id="refund" class="page hidden">
  <div class="panel policy">
   <h2>Refund and Cancellation Policy</h2>
   <p><b>Last updated: 19 November 2026</b></p>
-  <p>GBPESA GB SHOP inalenga kuhakikisha kila mteja anapata huduma aliyoagiza. Sera hii inaeleza namna tunavyoshughulikia malalamiko ya malipo, oda na marejesho.</p>
-
+  <p>GBPESA GB SHOP inalenga kuhakikisha kila mteja anapata huduma aliyoagiza.</p>
   <h3>1. Oda ambazo hazijakamilika</h3>
-  <p>Mteja akilipa lakini kifurushi alichoagiza kisipowasilishwa, anaweza kuwasiliana nasi ili oda ichunguzwe na kurekebishwa au kurejeshewa fedha pale inapostahili.</p>
-
+  <p>Mteja akilipa lakini kifurushi kisipowasilishwa, anaweza kuwasiliana nasi ili oda ichunguzwe na kurekebishwa au kurejeshewa fedha pale inapostahili.</p>
   <h3>2. Malipo yaliyorudiwa</h3>
-  <p>Ikiwa mteja amelipa zaidi ya mara moja kwa oda ileile, atoe taarifa na vielelezo vya miamala ili malipo ya ziada yachunguzwe.</p>
-
-  <h3>3. Namba ya simu isiyo sahihi</h3>
-  <p>Mteja anawajibika kuthibitisha namba ya simu na kifurushi kabla ya kuwasilisha oda. Oda iliyokwisha kutekelezwa kwa namba iliyowekwa na mteja inaweza isiweze kurejeshewa fedha.</p>
-
+  <p>Malipo ya ziada kwa oda moja yatachunguzwa kwa kutumia vielelezo vya muamala.</p>
+  <h3>3. Namba isiyo sahihi</h3>
+  <p>Mteja anawajibika kuthibitisha namba ya simu kabla ya kuwasilisha oda.</p>
   <h3>4. Oda zilizofanikiwa</h3>
-  <p>Oda ambayo kifurushi kimewasilishwa kwa mafanikio kwa namba iliyothibitishwa kwa kawaida hairuhusu kurejeshewa fedha, isipokuwa pale sheria au uchunguzi wa tatizo unapohitaji hatua nyingine.</p>
-
+  <p>Oda iliyowasilishwa kwa mafanikio kwa namba iliyothibitishwa kwa kawaida hairuhusu refund isipokuwa pale sheria au uchunguzi unapohitaji hatua nyingine.</p>
   <h3>5. Namna ya kuomba refund</h3>
-  <p>Mteja awasiliane nasi na atoe taarifa hizi:</p>
-  <ul>
-   <li>Namba ya oda.</li>
-   <li>Reference ya muamala.</li>
-   <li>Namba ya simu iliyotumika.</li>
-   <li>Maelezo ya tatizo.</li>
-  </ul>
-
-  <h3>6. Mawasiliano ya refund</h3>
+  <ul><li>Namba ya oda.</li><li>Reference ya muamala.</li><li>Namba ya simu iliyotumika.</li><li>Maelezo ya tatizo.</li></ul>
+  <h3>6. Mawasiliano</h3>
   <p>Email: paulzakaria45@gmail.com</p>
   <p>WhatsApp: +255 702 715 377</p>
-  <p>Maombi yatachunguzwa na kushughulikiwa kulingana na hali ya muamala, masharti ya mtoa huduma wa malipo na sheria zinazotumika.</p>
  </div>
 </section>
 
-<!-- PRIVACY -->
 <section id="privacy" class="page hidden">
  <div class="panel policy">
   <h2>Privacy Policy</h2>
   <p><b>Last updated: 19 November 2026</b></p>
-  <p>GBPESA GB SHOP inaheshimu faragha ya wateja wake. Sera hii inaeleza taarifa tunazoweza kukusanya na matumizi yake.</p>
-
+  <p>GBPESA GB SHOP inaheshimu faragha ya wateja wake.</p>
   <h3>1. Taarifa tunazokusanya</h3>
-  <ul>
-   <li>Jina la mteja.</li>
-   <li>Email na namba ya simu.</li>
-   <li>Namba ya simu inayopokea kifurushi.</li>
-   <li>Taarifa za oda, malipo na transaction reference.</li>
-  </ul>
-
+  <ul><li>Jina la mteja.</li><li>Email na namba ya simu.</li><li>Namba ya simu inayopokea GB.</li><li>Taarifa za oda na malipo.</li></ul>
   <h3>2. Matumizi ya taarifa</h3>
-  <p>Taarifa hutumika kusimamia akaunti, kutengeneza na kufuatilia oda, kuhakiki malipo, kutoa huduma kwa wateja na kuzuia matumizi mabaya.</p>
-
+  <p>Taarifa hutumika kusimamia akaunti, oda, malipo na huduma kwa wateja.</p>
   <h3>3. Uhifadhi wa taarifa</h3>
-  <p>Taarifa za akaunti na oda huhifadhiwa kwenye mifumo ya kidijitali inayotumika kuendesha huduma. Tunachukua hatua zinazofaa kulinda taarifa hizo.</p>
-
+  <p>Taarifa huhifadhiwa kwenye mifumo ya kidijitali inayotumika kuendesha huduma.</p>
   <h3>4. Kushirikisha taarifa</h3>
-  <p>Tunaweza kushirikisha taarifa zinazohitajika na watoa huduma wa malipo au huduma za kiufundi pale inapohitajika kutekeleza oda, kuthibitisha malipo au kutimiza wajibu wa kisheria.</p>
-
+  <p>Taarifa zinazohitajika zinaweza kushirikishwa na watoa huduma wa malipo au kiufundi pale inapohitajika.</p>
   <h3>5. Usalama</h3>
-  <p>Tunatumia hatua za kiusalama kulinda taarifa. Hata hivyo, hakuna mfumo wa intaneti unaoweza kuhakikishiwa usalama wa asilimia 100.</p>
-
+  <p>Tunachukua hatua zinazofaa kulinda taarifa. Hakuna mfumo wa intaneti unaoweza kuhakikishiwa usalama wa asilimia 100.</p>
   <h3>6. Haki za mteja</h3>
-  <p>Mteja anaweza kuwasiliana nasi kuhusu taarifa zake, marekebisho au maombi yanayohusu faragha yake.</p>
-
+  <p>Mteja anaweza kuwasiliana nasi kuhusu taarifa zake.</p>
   <h3>7. Mawasiliano</h3>
   <p>Email: paulzakaria45@gmail.com</p>
   <p>WhatsApp: +255 702 715 377</p>
  </div>
 </section>
 
-<!-- TERMS -->
 <section id="terms" class="page hidden">
  <div class="panel policy">
   <h2>Terms and Conditions</h2>
   <p><b>Last updated: 19 November 2026</b></p>
-
   <h3>1. Kukubali masharti</h3>
-  <p>Kwa kutumia GBPESA GB SHOP, unakubali masharti haya na sera nyingine zinazohusiana na huduma zetu.</p>
-
+  <p>Kwa kutumia GBPESA GB SHOP, unakubali masharti haya.</p>
   <h3>2. Akaunti ya mteja</h3>
-  <p>Mteja anatakiwa kutoa taarifa sahihi wakati wa kujisajili na kulinda password yake. Hairuhusiwi kutumia akaunti ya mtu mwingine bila ruhusa.</p>
-
+  <p>Mteja anatakiwa kutoa taarifa sahihi na kulinda password yake.</p>
   <h3>3. Vifurushi na bei</h3>
-  <p>Vifurushi, kiasi cha GB, muda wa matumizi na bei huonyeshwa kwenye website. Upatikanaji wa huduma unaweza kutegemea mtandao na masharti ya kifurushi husika.</p>
-
+  <p>Vifurushi, GB, muda na bei huonyeshwa kwenye website.</p>
   <h3>4. Oda</h3>
-  <p>Mteja anatakiwa kukagua kifurushi na namba ya mpokeaji kabla ya kutengeneza oda. Kutengeneza oda hakumaanishi moja kwa moja kuwa malipo yamekamilika.</p>
-
+  <p>Mteja anatakiwa kukagua kifurushi na namba ya mpokeaji kabla ya kutengeneza oda.</p>
   <h3>5. Malipo</h3>
-  <p>Malipo yatathibitishwa kupitia utaratibu rasmi wa malipo utakaokuwa umewezeshwa kwenye website. Mteja hapaswi kudhani oda imelipwa mpaka mfumo uonyeshe hali sahihi ya malipo.</p>
-
-  <h3>6. Uwasilishaji wa huduma</h3>
-  <p>Utekelezaji wa oda unaweza kuathiriwa na upatikanaji wa huduma, mtandao au hitilafu za watoa huduma wengine.</p>
-
+  <p>Malipo yatahakikiwa kupitia utaratibu rasmi wa malipo utakaowezeshwa kwenye website. Oda haitahesabiwa kuwa imelipwa bila uthibitisho sahihi.</p>
+  <h3>6. Uwasilishaji</h3>
+  <p>Utekelezaji unaweza kuathiriwa na upatikanaji wa huduma au hitilafu za watoa huduma wengine.</p>
   <h3>7. Matumizi yasiyoruhusiwa</h3>
-  <p>Hairuhusiwi kuingilia mfumo, kutumia taarifa za malipo kwa udanganyifu au kujaribu kupata huduma kwa njia isiyo halali.</p>
-
-  <h3>8. Mabadiliko ya masharti</h3>
-  <p>GBPESA GB SHOP inaweza kusasisha masharti haya pale inapohitajika. Toleo jipya litawekwa kwenye ukurasa huu.</p>
-
+  <p>Hairuhusiwi kuingilia mfumo au kutumia taarifa za malipo kwa udanganyifu.</p>
+  <h3>8. Mabadiliko</h3>
+  <p>Masharti yanaweza kusasishwa pale inapohitajika.</p>
   <h3>9. Mawasiliano</h3>
   <p>Email: paulzakaria45@gmail.com</p>
   <p>WhatsApp: +255 702 715 377</p>
-  <p>Anuani: P. O. Box 83, Kaliua, Tanzania.</p>
+  <p>P. O. Box 83, Kaliua, Tanzania.</p>
  </div>
 </section>
 
-<!-- FAQ -->
 <section id="faq" class="page hidden">
  <div class="panel">
   <h2>Maswali yanayoulizwa mara kwa mara</h2>
   <h3>1. Ninawezaje kununua GB?</h3>
-  <p>Fungua akaunti, ingia, chagua kifurushi na fuata hatua za kutengeneza oda.</p>
-
+  <p>Fungua akaunti, ingia, chagua kifurushi na fuata hatua za kuwasilisha oda.</p>
   <h3>2. Nawezaje kuona oda zangu?</h3>
   <p>Ingia kwenye akaunti kisha chagua Oda zangu.</p>
-
   <h3>3. Oda yangu haijakamilika. Nifanye nini?</h3>
   <p>Wasiliana nasi kupitia WhatsApp au email na utaje namba ya oda.</p>
-
-  <h3>4. Nawezaje kuomba kurejeshewa fedha?</h3>
-  <p>Soma Refund Policy na uwasiliane na huduma kwa wateja ukiwa na taarifa za muamala.</p>
-
+  <h3>4. Nawezaje kuomba refund?</h3>
+  <p>Soma Refund Policy na uwasiliane na huduma kwa wateja.</p>
   <h3>5. Nawezaje kupata msaada?</h3>
   <p>WhatsApp: +255 702 715 377 au email: paulzakaria45@gmail.com.</p>
  </div>
 </section>
 
-<!-- ADMIN -->
 <section id="admin" class="page hidden">
  <div class="panel">
   <h2>GBPESA ADMIN</h2>
@@ -343,7 +478,7 @@ footer a{color:#ffe5a0}
    <option value="true">Kionekane kwa wateja</option>
    <option value="false">Kifiche kwa wateja</option>
   </select>
-  <button id="savePackage" style="width:100%">Hifadhi kifurushi</button>
+  <button id="savePackage" style="width:100%">HIFADHI KIFURUSHI</button>
   <button id="cancelEdit" class="secondary hidden" style="width:100%;margin-top:7px">Ghairi</button>
   <div id="packageMsg"></div>
  </div>
@@ -365,7 +500,16 @@ footer a{color:#ffe5a0}
 
 <footer>
  <div class="footer-inner">
-  <div class="logo">GBPESA <span>GB SHOP</span></div>
+  <div class="brand">
+   <div class="logo-icon">
+    <svg viewBox="0 0 100 100" fill="none">
+     <path d="M18 24H65C78 24 86 33 86 46C86 59 78 68 65 68H45V83H18V24Z" fill="#07543E"/>
+     <path d="M28 35H63C70 35 74 39 74 46C74 53 70 57 63 57H45V73H28V35Z" fill="#FFF1C2"/>
+     <path d="M52 12L40 43H57L45 88L73 48H56L69 12H52Z" fill="#D79A20"/>
+    </svg>
+   </div>
+   <div class="brand-name">GBPESA <span>GB SHOP</span></div>
+  </div>
   <p>Nunua GB kwa urahisi · Tanzania</p>
   <div class="footer-links">
    <button data-page="about">Kuhusu sisi</button>
@@ -465,11 +609,11 @@ async function loadPackages(){
 
  $("packages").innerHTML=packages.length?packages.map(p=>`
   <div class="package">
-   <h3>${esc(p.package_name)}</h3>
+   <div class="package-name">${esc(p.package_name)}</div>
+   <div class="gb-number">${esc(p.gb_amount)} GB</div>
    <div class="price">TSh ${money(p.price_tzs)}</div>
-   <p>${esc(p.gb_amount)} GB</p>
-   <p class="small">Miezi ${esc(p.validity_months)}</p>
-   <button data-buy="${esc(p.id)}" style="width:100%">Nunua sasa</button>
+   <div class="validity">MIEZI ${esc(p.validity_months)}</div>
+   <button data-buy="${esc(p.id)}">NUNUA SASA</button>
   </div>`).join(""):"Hakuna vifurushi kwa sasa.";
 }
 
@@ -487,15 +631,14 @@ $("packages").addEventListener("click",e=>{
  if(!chosen)return;
 
  $("chosen").innerHTML=`
-  <div class="notice">
-   <b>${esc(chosen.package_name)}</b><br>
-   ${esc(chosen.gb_amount)} GB ·
-   TSh ${money(chosen.price_tzs)} ·
-   Miezi ${esc(chosen.validity_months)}
-  </div>`;
+  <b>${esc(chosen.package_name)}</b><br>
+  <strong style="font-size:22px;color:var(--g)">${esc(chosen.gb_amount)} GB</strong><br>
+  <b>TSh ${money(chosen.price_tzs)}</b>
+  <span class="small"> · Miezi ${esc(chosen.validity_months)}</span>`;
 
  $("buyPanel").classList.remove("hidden");
  $("buyMsg").innerHTML="";
+ $("recipient").value="";
  $("buyPanel").scrollIntoView({behavior:"smooth"});
 });
 
@@ -510,8 +653,8 @@ $("createOrder").onclick=async()=>{
  }
 
  const waWindow=window.open("about:blank","_blank");
-
  $("createOrder").disabled=true;
+ $("createOrder").textContent="INATENGENEZA...";
 
  try{
   const {data,error}=await db.rpc("gb_create_order",{
@@ -538,9 +681,8 @@ Tafadhali nisaidie kukamilisha oda yangu.
 Asante.`;
 
   const whatsappLink=
-   "intent://send?phone="+WHATSAPP_NUMBER+
-   "&text="+encodeURIComponent(messageText)+
-   "#Intent;scheme=whatsapp;package=com.whatsapp.w4b;end";
+   "https://wa.me/"+WHATSAPP_NUMBER+
+   "?text="+encodeURIComponent(messageText);
 
   if(waWindow){
    waWindow.location.href=whatsappLink;
@@ -556,6 +698,7 @@ Asante.`;
   msg("buyMsg",error.message||"Imeshindikana kutengeneza oda.",true);
  }finally{
   $("createOrder").disabled=false;
+  $("createOrder").textContent="TENGENEZA ODA";
  }
 };
 
@@ -769,17 +912,14 @@ async function loadAdminOrders(){
    <p>Bei: TSh ${money(o.price_tzs)}</p>
    <p>Mpokeaji: ${esc(o.recipient_phone)}</p>
    <p>Reference: ${esc(o.transaction_reference||"Haijawekwa")}</p>
-
    <label>Hali ya oda</label>
    <select id="status-${esc(o.id)}">
     ${["pending_payment","payment_submitted","verified","delivered","rejected"].map(s=>
      `<option value="${s}" ${o.status===s?"selected":""}>${s}</option>`
     ).join("")}
    </select>
-
    <label>Maelezo ya Admin</label>
    <input id="note-${esc(o.id)}" value="${esc(o.admin_note||"")}">
-
    <button data-save-order="${esc(o.id)}">Hifadhi mabadiliko</button>
    <button data-wa="${esc(o.id)}" class="secondary">WhatsApp</button>
   </div>`).join("")||"Hakuna oda.";
@@ -864,8 +1004,7 @@ $("register").onclick=async()=>{
  }
 
  const {data,error}=await db.auth.signUp({
-  email,
-  password,
+  email,password,
   options:{data:{full_name:name,phone}}
  });
 
@@ -912,4 +1051,4 @@ async function start(){
 start();
 </script>
 </body>
- </html>
+</html>
